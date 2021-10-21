@@ -45,17 +45,11 @@ public class Differences {
     }
 
     public boolean isDifferStrictly() {
-        if (notOnFirst.size() == 0 && notOnSecond.size() == 0 && modifiedFilesStrictly.size() == 0) {
-            return false;
-        }
-        return true;
+        return notOnFirst.size() != 0 || notOnSecond.size() != 0 || modifiedFilesStrictly.size() != 0;
     }
 
     public boolean isDifferLoosely() {
-        if (notOnFirst.size() == 0 && notOnSecond.size() == 0 && modifiedFilesLoosely.size() == 0) {
-            return false;
-        }
-        return true;
+        return notOnFirst.size() != 0 || notOnSecond.size() != 0 || modifiedFilesLoosely.size() != 0;
     }
 
     @Override
