@@ -19,6 +19,7 @@ public class Differences {
     private Set<Path> common = new HashSet<>();
     private Set<Path> modifiedFilesForSize = new HashSet<>();
     private Set<Path> modifiedFilesForTime = new HashSet<>();
+    private Set<Path> modifiedForMD5 = new HashSet<>();
 
     public Differences(DirectoryStamp firstDir, DirectoryStamp secondDir) {
         this.firstDir = firstDir;
@@ -51,17 +52,18 @@ public class Differences {
     }
 
     private void compareCommonFiles() {
-        Path firstRoot = firstDir.getRoot();
-        Path secondRoot = secondDir.getRoot();
-
         try {
             for (Path path : common) {
                 if (getSize(firstDir, path) != getSize(secondDir, path)) {
                     modifiedFilesForSize.add(path);
                 }
 
-                if (getLastModifiedTime(firstDir, path).equals(getLastModifiedTime(secondDir, path))) {
+                if (!getLastModifiedTime(firstDir, path).equals(getLastModifiedTime(secondDir, path))) {
                     modifiedFilesForTime.add(path);
+                }
+
+                if (!getMD5(firstDir, path).equals(getMD5(secondDir, path))) {
+                    modifiedForMD5.add(path);
                 }
             }
         } catch (Exception e) {
@@ -77,6 +79,11 @@ public class Differences {
     private LocalDateTime getLastModifiedTime(DirectoryStamp directoryStamp, Path relativePath) throws NoSuchElementException {
         Path root = directoryStamp.getRoot();
         return directoryStamp.getFileLastModifiedTime(root.resolve(relativePath));
+    }
+
+    private String getMD5(DirectoryStamp directoryStamp, Path relativePath) throws NoSuchElementException {
+        Path root = directoryStamp.getRoot();
+        return directoryStamp.getMD5(root.resolve(relativePath));
     }
 
     public Set<Path> getOnlyInFirst() {
@@ -95,11 +102,12 @@ public class Differences {
         return Collections.unmodifiableSet(modifiedFilesForTime);
     }
 
-    public boolean isEqualsStrictly() {
-        if (isEqualsOnList()) {
+    public Set<Path> getModifiedForMD5() {
+        return modifiedForMD5;
+    }
 
-        }
-        return false;
+    public boolean isEqualsInMD5() {
+        return isEqualsOnList() && modifiedForMD5.isEmpty();
     }
 
     public boolean isEqualsInTime() {

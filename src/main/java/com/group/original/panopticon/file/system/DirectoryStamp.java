@@ -2,9 +2,11 @@ package com.group.original.panopticon.file.system;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.file.attrs.Size;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -38,14 +40,24 @@ public class DirectoryStamp implements Serializable {
         try {
             files = Files.walk(Path.of(root))
                     .filter(Files::isRegularFile)
-                    .map(path -> new FileStamp(path, readAttributes(path)))
+                    .map(path -> new FileStamp(path, readMD5(path), readAttributes(path)))
                     .collect(Collectors.toUnmodifiableSet());
         } catch (IOException e) {
             ExceptionHandler.outputMessage(e);
         }
     }
 
-    private BasicFileAttributes readAttributes(Path path) {
+    private String readMD5(Path path) {
+        String md5 = "";
+        try (InputStream inputStream = Files.newInputStream(path)) {
+            md5 = DigestUtils.md5Hex(inputStream);
+        } catch (IOException ioException) {
+            ExceptionHandler.outputMessage(ioException);
+        }
+        return md5;
+    }
+
+    private BasicFileAttributes readAttributes(Path path) throws RuntimeException {
         try {
             return Files.readAttributes(path, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         } catch (IOException ioException) {
@@ -79,9 +91,9 @@ public class DirectoryStamp implements Serializable {
         throw new NoSuchElementException();
     }
 
-    public BufferedReader getBufferedReader(Path path) throws NoSuchElementException, IOException {
+    public String getMD5(Path path) throws NoSuchElementException {
         if (getPaths().contains(path)) {
-            return getFile(path).getBufferedReader();
+            return getFile(path).getMD5();
         }
         throw new NoSuchElementException();
     }

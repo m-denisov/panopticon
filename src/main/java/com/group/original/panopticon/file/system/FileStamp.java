@@ -4,16 +4,11 @@ import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.file.attrs.Size;
 import com.group.original.panopticon.file.attrs.Time;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
@@ -23,24 +18,27 @@ public class FileStamp implements Serializable {
     private transient DateTimeFormatter formatter;
 
     private String path;
+    private String md5;
     private LocalDateTime creationTime;
     private LocalDateTime lastAccessTime;
     private LocalDateTime lastModifiedTime;
     private long size;
 
-    public FileStamp(Path path, BasicFileAttributes basicFileAttributes) {
-        if (path == null || basicFileAttributes == null) {
+    public FileStamp(Path path, String md5, BasicFileAttributes basicFileAttributes) {
+        if (path == null || basicFileAttributes == null || md5 == null || md5.isBlank()) {
             ExceptionHandler.throwException("null file or attributes");
         }
         this.path = path.toString();
+        this.md5 = md5;
         creationTime = toLocalDateTime(basicFileAttributes.creationTime());
         lastAccessTime = toLocalDateTime(basicFileAttributes.lastAccessTime());
         lastModifiedTime = toLocalDateTime(basicFileAttributes.lastModifiedTime());
         size = basicFileAttributes.size();
     }
 
-    public FileStamp(String path, LocalDateTime creationTime, LocalDateTime lastAccessTime, LocalDateTime lastModifiedTime, long size) {
+    public FileStamp(String path, String md5, LocalDateTime creationTime, LocalDateTime lastAccessTime, LocalDateTime lastModifiedTime, long size) {
         this.path = path;
+        this.md5 = md5;
         this.creationTime = creationTime;
         this.lastAccessTime = lastAccessTime;
         this.lastModifiedTime = lastModifiedTime;
@@ -53,6 +51,10 @@ public class FileStamp implements Serializable {
 
     public Path getPath() {
         return Path.of(path);
+    }
+
+    public String getMD5() {
+        return md5;
     }
 
     public LocalDateTime getCreationTime() {
@@ -68,15 +70,15 @@ public class FileStamp implements Serializable {
     }
 
     public String getFormattedCreationTime() {
-        return creationTime.format(formatter);
+        return Time.formattedDateTime(creationTime);
     }
 
     public String getFormattedLastAccessTime() {
-        return lastAccessTime.format(formatter);
+        return Time.formattedDateTime(lastAccessTime);
     }
 
     public String getFormattedLastModifiedTime() {
-        return lastModifiedTime.format(formatter);
+        return Time.formattedDateTime(lastModifiedTime);
     }
 
     public long getSize() {
@@ -85,10 +87,6 @@ public class FileStamp implements Serializable {
 
     public String getFormattedSize() {
         return Size.getFormattedSize(size);
-    }
-
-    public BufferedReader getBufferedReader() throws IOException {
-        return Files.newBufferedReader(Path.of(path));
     }
 
     @Override
