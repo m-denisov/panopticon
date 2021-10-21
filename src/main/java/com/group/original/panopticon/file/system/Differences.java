@@ -2,7 +2,6 @@ package com.group.original.panopticon.file.system;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -84,6 +83,10 @@ public class Differences {
     private String getMD5(DirectoryStamp directoryStamp, Path relativePath) throws NoSuchElementException {
         Path root = directoryStamp.getRoot();
         return directoryStamp.getMD5(root.resolve(relativePath));
+    }
+
+    public Set<Path> getCommon() {
+        return common;
     }
 
     public Set<Path> getOnlyInFirst() {
