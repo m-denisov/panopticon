@@ -1,14 +1,26 @@
 package com.group.original.panopticon;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
+import com.group.original.panopticon.file.attrs.Size;
+import com.group.original.panopticon.file.attrs.Time;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 import com.group.original.panopticon.output.manager.ConsoleOutputManager;
+import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App {
 
@@ -30,11 +42,21 @@ public class App {
 //        System.out.println(first.relativize(second));
 //        initServices();
 
-        DirectoryStamp directoryStamp = new DirectoryStamp(third);
-        System.out.println(directoryStamp.getNumberOfFiles());
-        for (Path path : directoryStamp.getRelativePaths()) {
-            System.out.println(path);
+        Path testSize = Path.of("C:\\Users\\m.denisov\\Documents\\Стандарты\\Стандарты Стандартизация\\Текстовый документ OpenDocument.odt");
+        System.out.println(Time.formattedDateTime(LocalDateTime.now()));
+
+        try (InputStream inputStream = Files.newInputStream(testSize)) {
+            System.out.println(DigestUtils.md5Hex(inputStream));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        System.out.println(Time.formattedDateTime(LocalDateTime.now()));
+//        DirectoryStamp directoryStamp = new DirectoryStamp(third);
+//        System.out.println(directoryStamp.getNumberOfFiles());
+//        for (Path path : directoryStamp.getRelativePaths()) {
+//            System.out.println(path);
+//        }
 
     }
 

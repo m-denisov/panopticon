@@ -1,13 +1,16 @@
 package com.group.original.panopticon.file.system;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
+import com.group.original.panopticon.file.attrs.Size;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,6 +65,27 @@ public class DirectoryStamp implements Serializable {
         return Size.getFormattedSize(getSize());
     }
 
+    public long getFileSize(Path path) throws NoSuchElementException {
+        if (getPaths().contains(path)) {
+            return getFile(path).getSize();
+        }
+        throw new NoSuchElementException();
+    }
+
+    public LocalDateTime getFileLastModifiedTime(Path path)  throws NoSuchElementException {
+        if (getPaths().contains(path)) {
+            return getFile(path).getLastModifiedTime();
+        }
+        throw new NoSuchElementException();
+    }
+
+    public BufferedReader getBufferedReader(Path path) throws NoSuchElementException, IOException {
+        if (getPaths().contains(path)) {
+            return getFile(path).getBufferedReader();
+        }
+        throw new NoSuchElementException();
+    }
+
     public long getSize() {
         return files.stream()
                 .mapToLong(FileStamp::getSize)
@@ -86,6 +110,13 @@ public class DirectoryStamp implements Serializable {
 
     private Path relativizePath(FileStamp fileStamp) {
         return Path.of(root).relativize(fileStamp.getPath());
+    }
+
+    private FileStamp getFile(Path path) {
+        return files.stream()
+                .filter(fileStamp -> fileStamp.getPath().equals(path))
+                .findAny()
+                .get();
     }
 
     @Override

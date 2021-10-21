@@ -1,8 +1,14 @@
 package com.group.original.panopticon.file.system;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
+import com.group.original.panopticon.file.attrs.Size;
+import com.group.original.panopticon.file.attrs.Time;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
@@ -13,8 +19,6 @@ import java.util.Objects;
 
 public class FileStamp implements Serializable {
     private static final long serialVersionUID = 1;
-    private static final String ZONE_ID = "Europe/Moscow";
-    private static final String FORMAT_PATTERN = "yyyy-MM-dd HH:mm:dd";
 
     private transient DateTimeFormatter formatter;
 
@@ -33,7 +37,6 @@ public class FileStamp implements Serializable {
         lastAccessTime = toLocalDateTime(basicFileAttributes.lastAccessTime());
         lastModifiedTime = toLocalDateTime(basicFileAttributes.lastModifiedTime());
         size = basicFileAttributes.size();
-        formatter = DateTimeFormatter.ofPattern(FORMAT_PATTERN);
     }
 
     public FileStamp(String path, LocalDateTime creationTime, LocalDateTime lastAccessTime, LocalDateTime lastModifiedTime, long size) {
@@ -42,11 +45,10 @@ public class FileStamp implements Serializable {
         this.lastAccessTime = lastAccessTime;
         this.lastModifiedTime = lastModifiedTime;
         this.size = size;
-        formatter = DateTimeFormatter.ofPattern(FORMAT_PATTERN);
     }
 
     private LocalDateTime toLocalDateTime(FileTime fileTime) {
-        return LocalDateTime.ofInstant(fileTime.toInstant(), ZoneId.of(ZONE_ID));
+        return Time.ofInstant(fileTime.toInstant());
     }
 
     public Path getPath() {
@@ -83,6 +85,10 @@ public class FileStamp implements Serializable {
 
     public String getFormattedSize() {
         return Size.getFormattedSize(size);
+    }
+
+    public BufferedReader getBufferedReader() throws IOException {
+        return Files.newBufferedReader(Path.of(path));
     }
 
     @Override

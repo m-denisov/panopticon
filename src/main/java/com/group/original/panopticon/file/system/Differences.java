@@ -1,18 +1,24 @@
 package com.group.original.panopticon.file.system;
 
+import com.group.original.panopticon.exception.ExceptionHandler;
+
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class Differences {
     private DirectoryStamp firstDir;
     private DirectoryStamp secondDir;
 
-    private Set<Path> notOnFirst = new HashSet<>();
-    private Set<Path> notOnSecond = new HashSet<>();
+    private Set<Path> onlyInFirst = new HashSet<>();
+    private Set<Path> onlyInSecond = new HashSet<>();
     private Set<Path> common = new HashSet<>();
-    private Set<Path> modifiedFilesStrictly = new HashSet<>();
-    private Set<Path> modifiedFilesLoosely = new HashSet<>();
+    private Set<Path> modifiedFilesForSize = new HashSet<>();
+    private Set<Path> modifiedFilesForTime = new HashSet<>();
 
     public Differences(DirectoryStamp firstDir, DirectoryStamp secondDir) {
         this.firstDir = firstDir;
@@ -21,35 +27,91 @@ public class Differences {
     }
 
     private void compare() {
-
+        comparePaths();
+        compareCommonFiles();
     }
 
     private void comparePaths() {
+        Set<Path> firstDirPaths = firstDir.getRelativePaths();
+        Set<Path> secondDirPaths = secondDir.getRelativePaths();
 
+        for (Path path : firstDirPaths) {
+            if (secondDirPaths.contains(path)) {
+                common.add(path);
+            } else {
+                onlyInFirst.add(path);
+            }
+        }
+
+        for (Path path : secondDirPaths) {
+            if (!common.contains(path)) {
+                onlyInSecond.add(path);
+            }
+        }
     }
 
-    public Set<Path> getNotOnFirst() {
-        return notOnFirst;
+    private void compareCommonFiles() {
+        Path firstRoot = firstDir.getRoot();
+        Path secondRoot = secondDir.getRoot();
+
+        try {
+            for (Path path : common) {
+                if (getSize(firstDir, path) != getSize(secondDir, path)) {
+                    modifiedFilesForSize.add(path);
+                }
+
+                if (getLastModifiedTime(firstDir, path).equals(getLastModifiedTime(secondDir, path))) {
+                    modifiedFilesForTime.add(path);
+                }
+            }
+        } catch (Exception e) {
+            ExceptionHandler.outputMessage(e);
+        }
     }
 
-    public Set<Path> getNotOnSecond() {
-        return notOnSecond;
+    private long getSize(DirectoryStamp directoryStamp, Path relativePath) {
+        Path root = directoryStamp.getRoot();
+        return directoryStamp.getFileSize(root.resolve(relativePath));
     }
 
-    public Set<Path> getModifiedFilesStrictly() {
-        return modifiedFilesStrictly;
+    private LocalDateTime getLastModifiedTime(DirectoryStamp directoryStamp, Path relativePath) throws NoSuchElementException {
+        Path root = directoryStamp.getRoot();
+        return directoryStamp.getFileLastModifiedTime(root.resolve(relativePath));
     }
 
-    public Set<Path> getModifiedFilesLoosely() {
-        return modifiedFilesLoosely;
+    public Set<Path> getOnlyInFirst() {
+        return Collections.unmodifiableSet(onlyInFirst);
     }
 
-    public boolean isDifferStrictly() {
-        return notOnFirst.size() != 0 || notOnSecond.size() != 0 || modifiedFilesStrictly.size() != 0;
+    public Set<Path> getOnlyInSecond() {
+        return Collections.unmodifiableSet(onlyInSecond);
     }
 
-    public boolean isDifferLoosely() {
-        return notOnFirst.size() != 0 || notOnSecond.size() != 0 || modifiedFilesLoosely.size() != 0;
+    public Set<Path> getModifiedFilesForSize() {
+        return Collections.unmodifiableSet(modifiedFilesForSize);
+    }
+
+    public Set<Path> getModifiedFilesForTime() {
+        return Collections.unmodifiableSet(modifiedFilesForTime);
+    }
+
+    public boolean isEqualsStrictly() {
+        if (isEqualsOnList()) {
+
+        }
+        return false;
+    }
+
+    public boolean isEqualsInTime() {
+        return isEqualsOnList() && modifiedFilesForTime.isEmpty();
+    }
+
+    public boolean isEqualsInSize() {
+        return isEqualsOnList() && modifiedFilesForSize.isEmpty();
+    }
+
+    public boolean isEqualsOnList() {
+        return onlyInFirst.isEmpty() && onlyInSecond.isEmpty();
     }
 
     @Override
@@ -63,37 +125,33 @@ public class Differences {
                 .append(secondDir.getRoot())
                 .append("\r\n");
 
-        if (!isDifferStrictly()) {
-            builder.append("No changes.\r\n}");
-            return builder.toString();
-        }
-        if (notOnFirst.size() > 0) {
+        if (onlyInFirst.size() > 0) {
             builder.append("Files that are not in the first directory, but are present in the second:\r\n");
-            for (Path path : notOnFirst) {
+            for (Path path : onlyInFirst) {
                 builder.append("    ")
                         .append(secondDir.getRoot().relativize(path))
                         .append("\r\n");
             }
         }
-        if (notOnSecond.size() > 0) {
+        if (onlyInSecond.size() > 0) {
             builder.append("Files that are not in the second directory, but are present in the first:\r\n");
-            for (Path path : notOnSecond) {
+            for (Path path : onlyInSecond) {
                 builder.append("    ")
                         .append(firstDir.getRoot().relativize(path))
                         .append("\r\n");
             }
         }
-        if (modifiedFilesLoosely.size() > 0) {
+        if (modifiedFilesForTime.size() > 0) {
             builder.append("Modified files (loosely):\r\n");
-            for (Path path : modifiedFilesLoosely) {
+            for (Path path : modifiedFilesForTime) {
                 builder.append("    ")
                         .append(firstDir.getRoot().relativize(path))
                         .append("\r\n");
             }
         }
-        if (modifiedFilesStrictly.size() > 0) {
+        if (modifiedFilesForSize.size() > 0) {
             builder.append("Modified files (strictly):\r\n");
-            for (Path path : modifiedFilesStrictly) {
+            for (Path path : modifiedFilesForSize) {
                 builder.append("    ")
                         .append(firstDir.getRoot().relativize(path))
                         .append("\r\n");

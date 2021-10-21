@@ -1,4 +1,4 @@
-package com.group.original.panopticon.file.system;
+package com.group.original.panopticon.file.attrs;
 
 public class Size {
     private static final String SIZE_FORMAT = "%d %s";
