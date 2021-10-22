@@ -3,6 +3,7 @@ package com.group.original.panopticon;
 import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.file.attrs.Size;
 import com.group.original.panopticon.file.attrs.Time;
+import com.group.original.panopticon.file.system.Differences;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 import com.group.original.panopticon.output.manager.ConsoleOutputManager;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -27,8 +28,8 @@ public class App {
 	public static void main( String[] args ) {
         //Path path = Path.of("C:\\Users\\m.denisov\\Documents\\Проекты\\станые, взамен утерянных\\Татхимфармпрепараты\\test");
 
-        Path first = Path.of("D:\\test");
-        Path second = Path.of("D:\\test\\1");
+        Path first = Path.of("C:\\Users\\m.denisov\\Documents\\Оборудование");
+        Path second = Path.of("D:\\test");
         Path testFile = Path.of("C:\\Users\\m.denisov\\Documents\\временные\\Без имени 1.odt");
         Path third = Path.of("F:\\1EN-TraceWay\\2.9. Департамент качества\\Проекты");
 //        BasicFileAttributes attributes = null;
@@ -42,14 +43,12 @@ public class App {
 //        System.out.println(first.relativize(second));
 //        initServices();
 
-        Path testSize = Path.of("C:\\Users\\m.denisov\\Documents\\Стандарты\\Стандарты Стандартизация\\Текстовый документ OpenDocument.odt");
         System.out.println(Time.formattedDateTime(LocalDateTime.now()));
 
-        try (InputStream inputStream = Files.newInputStream(testSize)) {
-            System.out.println(DigestUtils.md5Hex(inputStream));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DirectoryStamp firstStamp = new DirectoryStamp(first);
+        DirectoryStamp secondStamp = new DirectoryStamp(second);
+        Differences differences = new Differences(firstStamp, secondStamp);
+        System.out.println(differences);
 
         System.out.println(Time.formattedDateTime(LocalDateTime.now()));
 //        DirectoryStamp directoryStamp = new DirectoryStamp(third);

@@ -41,6 +41,7 @@ public class DirectoryStamp implements Serializable {
             files = Files.walk(Path.of(root))
                     .filter(Files::isRegularFile)
                     .map(path -> new FileStamp(path, readMD5(path), readAttributes(path)))
+                    .peek(System.out::println)
                     .collect(Collectors.toUnmodifiableSet());
         } catch (IOException e) {
             ExceptionHandler.outputMessage(e);
@@ -69,6 +70,10 @@ public class DirectoryStamp implements Serializable {
         return Path.of(root);
     }
 
+    public String getRootAsMD5() {
+        return DigestUtils.md5Hex(root);
+    }
+
     public Set<FileStamp> getFiles() {
         return files;
     }
@@ -84,7 +89,7 @@ public class DirectoryStamp implements Serializable {
         throw new NoSuchElementException();
     }
 
-    public LocalDateTime getFileLastModifiedTime(Path path)  throws NoSuchElementException {
+    public LocalDateTime getFileLastModifiedTime(Path path) throws NoSuchElementException {
         if (getPaths().contains(path)) {
             return getFile(path).getLastModifiedTime();
         }

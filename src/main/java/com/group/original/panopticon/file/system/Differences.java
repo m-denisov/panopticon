@@ -18,7 +18,7 @@ public class Differences {
     private Set<Path> common = new HashSet<>();
     private Set<Path> modifiedFilesForSize = new HashSet<>();
     private Set<Path> modifiedFilesForTime = new HashSet<>();
-    private Set<Path> modifiedForMD5 = new HashSet<>();
+    private Set<Path> modifiedFilesForMD5 = new HashSet<>();
 
     public Differences(DirectoryStamp firstDir, DirectoryStamp secondDir) {
         this.firstDir = firstDir;
@@ -62,7 +62,7 @@ public class Differences {
                 }
 
                 if (!getMD5(firstDir, path).equals(getMD5(secondDir, path))) {
-                    modifiedForMD5.add(path);
+                    modifiedFilesForMD5.add(path);
                 }
             }
         } catch (Exception e) {
@@ -105,12 +105,12 @@ public class Differences {
         return Collections.unmodifiableSet(modifiedFilesForTime);
     }
 
-    public Set<Path> getModifiedForMD5() {
-        return modifiedForMD5;
+    public Set<Path> getModifiedFilesForMD5() {
+        return modifiedFilesForMD5;
     }
 
     public boolean isEqualsInMD5() {
-        return isEqualsOnList() && modifiedForMD5.isEmpty();
+        return isEqualsOnList() && modifiedFilesForMD5.isEmpty();
     }
 
     public boolean isEqualsInTime() {
@@ -135,12 +135,12 @@ public class Differences {
                 .append("Second Directory = ")
                 .append(secondDir.getRoot())
                 .append("\r\n");
-
+        System.out.println(builder);
         if (onlyInFirst.size() > 0) {
             builder.append("Files that are not in the first directory, but are present in the second:\r\n");
             for (Path path : onlyInFirst) {
                 builder.append("    ")
-                        .append(secondDir.getRoot().relativize(path))
+                        .append(path)
                         .append("\r\n");
             }
         }
@@ -148,23 +148,31 @@ public class Differences {
             builder.append("Files that are not in the second directory, but are present in the first:\r\n");
             for (Path path : onlyInSecond) {
                 builder.append("    ")
-                        .append(firstDir.getRoot().relativize(path))
+                        .append(path)
                         .append("\r\n");
             }
         }
         if (modifiedFilesForTime.size() > 0) {
-            builder.append("Modified files (loosely):\r\n");
+            builder.append("Modified files (for time):\r\n");
             for (Path path : modifiedFilesForTime) {
                 builder.append("    ")
-                        .append(firstDir.getRoot().relativize(path))
+                        .append(path)
                         .append("\r\n");
             }
         }
         if (modifiedFilesForSize.size() > 0) {
-            builder.append("Modified files (strictly):\r\n");
+            builder.append("Modified files (for size):\r\n");
             for (Path path : modifiedFilesForSize) {
                 builder.append("    ")
-                        .append(firstDir.getRoot().relativize(path))
+                        .append(path)
+                        .append("\r\n");
+            }
+        }
+        if (modifiedFilesForMD5.size() > 0) {
+            builder.append("Modified files (for md5):\r\n");
+            for (Path path : modifiedFilesForSize) {
+                builder.append("    ")
+                        .append(path)
                         .append("\r\n");
             }
         }
