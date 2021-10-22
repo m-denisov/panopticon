@@ -37,7 +37,7 @@ public class FileStamp implements Serializable {
     }
 
     public FileStamp(Path path, BasicFileAttributes basicFileAttributes) {
-        if (path == null || basicFileAttributes == null || md5 == null || md5.isBlank()) {
+        if (path == null || basicFileAttributes == null) {
             ExceptionHandler.throwException("null file or attributes");
         }
         this.path = path.toString();

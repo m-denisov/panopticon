@@ -8,10 +8,7 @@ import com.group.original.panopticon.file.system.DirectoryStamp;
 import com.group.original.panopticon.output.manager.ConsoleOutputManager;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -28,34 +25,39 @@ public class App {
 	public static void main( String[] args ) {
         //Path path = Path.of("C:\\Users\\m.denisov\\Documents\\Проекты\\станые, взамен утерянных\\Татхимфармпрепараты\\test");
 
+        Path secondStampPath = Path.of("C:\\Users\\m.denisov\\stamps\\2.txt");
+
         Path first = Path.of("C:\\Users\\m.denisov\\Documents\\Оборудование");
         Path second = Path.of("D:\\test");
         Path testFile = Path.of("C:\\Users\\m.denisov\\Documents\\временные\\Без имени 1.odt");
         Path third = Path.of("F:\\1EN-TraceWay\\2.9. Департамент качества\\Проекты");
-//        BasicFileAttributes attributes = null;
-//        try {
-//            attributes = Files.readAttributes(first, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(attributes.size() + " " + attributes.fileKey() + " " + attributes.lastModifiedTime().toInstant());
-//        System.out.println(attributes.lastAccessTime());
-//        System.out.println(first.relativize(second));
-//        initServices();
 
-        System.out.println(Time.formattedDateTime(LocalDateTime.now()));
-
-        DirectoryStamp firstStamp = DirectoryStamp.stampOf(first);
+//        DirectoryStamp firstStamp = DirectoryStamp.stampOf(first);
         DirectoryStamp secondStamp = DirectoryStamp.stampOf(second);
-        Differences differences = new Differences(firstStamp, secondStamp);
-        System.out.println(differences);
+//        Differences differences = new Differences(firstStamp, secondStamp);
+//        System.out.println(differences);
 
-        System.out.println(Time.formattedDateTime(LocalDateTime.now()));
-//        DirectoryStamp directoryStamp = new DirectoryStamp(third);
-//        System.out.println(directoryStamp.getNumberOfFiles());
-//        for (Path path : directoryStamp.getRelativePaths()) {
-//            System.out.println(path);
+//        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(secondStampPath.toString()))) {
+//            oos.writeObject(secondStamp);
+//        } catch (IOException ioException) {
+//            ioException.printStackTrace();
 //        }
+
+        DirectoryStamp stamp = null;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(secondStampPath.toString()))) {
+            stamp = (DirectoryStamp) ois.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (stamp != null) {
+            Differences differences = new Differences(secondStamp, stamp);
+            System.out.println(differences);
+        }
 
     }
 

@@ -136,17 +136,17 @@ public class Differences {
                 .append(secondDir.getRoot())
                 .append("\r\n");
         System.out.println(builder);
-        if (onlyInFirst.size() > 0) {
+        if (onlyInSecond.size() > 0) {
             builder.append("Files that are not in the first directory, but are present in the second:\r\n");
-            for (Path path : onlyInFirst) {
+            for (Path path : onlyInSecond) {
                 builder.append("    ")
                         .append(path)
                         .append("\r\n");
             }
         }
-        if (onlyInSecond.size() > 0) {
+        if (onlyInFirst.size() > 0) {
             builder.append("Files that are not in the second directory, but are present in the first:\r\n");
-            for (Path path : onlyInSecond) {
+            for (Path path : onlyInFirst) {
                 builder.append("    ")
                         .append(path)
                         .append("\r\n");
