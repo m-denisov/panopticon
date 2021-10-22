@@ -16,7 +16,7 @@ public class Differences {
     private Set<Path> onlyInFirst = new HashSet<>();
     private Set<Path> onlyInSecond = new HashSet<>();
     private Set<Path> common = new HashSet<>();
-    private Set<Path> modifiedFilesForSize = new HashSet<>();
+//    private Set<Path> modifiedFilesForSize = new HashSet<>();
     private Set<Path> modifiedFilesForTime = new HashSet<>();
     private Set<Path> modifiedFilesForMD5 = new HashSet<>();
 
@@ -51,16 +51,29 @@ public class Differences {
     }
 
     private void compareCommonFiles() {
+        compareCommonFilesInTime();
+        if (firstDir.isDeepStump() && secondDir.isDeepStump()) {
+            compareCommonFilesInMD5();
+        }
+            }
+
+    private void compareCommonFilesInTime() {
         try {
             for (Path path : common) {
-                if (getSize(firstDir, path) != getSize(secondDir, path)) {
-                    modifiedFilesForSize.add(path);
-                }
-
                 if (!getLastModifiedTime(firstDir, path).equals(getLastModifiedTime(secondDir, path))) {
                     modifiedFilesForTime.add(path);
                 }
 
+
+            }
+        } catch (Exception e) {
+            ExceptionHandler.outputMessage(e);
+        }
+    }
+
+    private void compareCommonFilesInMD5() {
+        try {
+            for (Path path : common) {
                 if (!getMD5(firstDir, path).equals(getMD5(secondDir, path))) {
                     modifiedFilesForMD5.add(path);
                 }
@@ -70,10 +83,10 @@ public class Differences {
         }
     }
 
-    private long getSize(DirectoryStamp directoryStamp, Path relativePath) {
-        Path root = directoryStamp.getRoot();
-        return directoryStamp.getFileSize(root.resolve(relativePath));
-    }
+//    private long getSize(DirectoryStamp directoryStamp, Path relativePath) {
+//        Path root = directoryStamp.getRoot();
+//        return directoryStamp.getFileSize(root.resolve(relativePath));
+//    }
 
     private LocalDateTime getLastModifiedTime(DirectoryStamp directoryStamp, Path relativePath) throws NoSuchElementException {
         Path root = directoryStamp.getRoot();
@@ -97,9 +110,9 @@ public class Differences {
         return Collections.unmodifiableSet(onlyInSecond);
     }
 
-    public Set<Path> getModifiedFilesForSize() {
-        return Collections.unmodifiableSet(modifiedFilesForSize);
-    }
+//    public Set<Path> getModifiedFilesForSize() {
+//        return Collections.unmodifiableSet(modifiedFilesForSize);
+//    }
 
     public Set<Path> getModifiedFilesForTime() {
         return Collections.unmodifiableSet(modifiedFilesForTime);
@@ -117,9 +130,9 @@ public class Differences {
         return isEqualsOnList() && modifiedFilesForTime.isEmpty();
     }
 
-    public boolean isEqualsInSize() {
-        return isEqualsOnList() && modifiedFilesForSize.isEmpty();
-    }
+//    public boolean isEqualsInSize() {
+//        return isEqualsOnList() && modifiedFilesForSize.isEmpty();
+//    }
 
     public boolean isEqualsOnList() {
         return onlyInFirst.isEmpty() && onlyInSecond.isEmpty();
@@ -160,17 +173,17 @@ public class Differences {
                         .append("\r\n");
             }
         }
-        if (modifiedFilesForSize.size() > 0) {
-            builder.append("Modified files (for size):\r\n");
-            for (Path path : modifiedFilesForSize) {
-                builder.append("    ")
-                        .append(path)
-                        .append("\r\n");
-            }
-        }
+//        if (modifiedFilesForSize.size() > 0) {
+//            builder.append("Modified files (for size):\r\n");
+//            for (Path path : modifiedFilesForSize) {
+//                builder.append("    ")
+//                        .append(path)
+//                        .append("\r\n");
+//            }
+//        }
         if (modifiedFilesForMD5.size() > 0) {
             builder.append("Modified files (for md5):\r\n");
-            for (Path path : modifiedFilesForSize) {
+            for (Path path : modifiedFilesForMD5) {
                 builder.append("    ")
                         .append(path)
                         .append("\r\n");
