@@ -2,9 +2,9 @@ package com.group.original.panopticon.file.system;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.file.attrs.Size;
+import com.group.original.panopticon.output.manager.ConsoleOutputManager;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -21,22 +21,59 @@ public class DirectoryStamp implements Serializable {
 
     private String root;
     private Set<FileStamp> files;
+    private boolean isDeepStump = false;
 
-    public DirectoryStamp(Path root) throws RuntimeException {
+    public static DirectoryStamp stampOf(Path root) {
+        DirectoryStamp stamp = new DirectoryStamp(root);
+        stamp.readDirectory();
+        return stamp;
+    }
+
+    public static DirectoryStamp stampOf(String root) {
+        DirectoryStamp stamp = new DirectoryStamp(root);
+        stamp.readDirectory();
+        return stamp;
+    }
+
+    public static DirectoryStamp deepStampOf(Path root) {
+        DirectoryStamp stamp = new DirectoryStamp(root);
+        stamp.readDirectoryDeeply();
+        stamp.setDeepStump(true);
+        return stamp;
+    }
+
+    public static DirectoryStamp deepStampOf(String root) {
+        DirectoryStamp stamp = new DirectoryStamp(root);
+        stamp.readDirectoryDeeply();
+        stamp.setDeepStump(true);
+        return stamp;
+    }
+
+    private DirectoryStamp(Path root) throws RuntimeException {
         if (root == null) ExceptionHandler.throwException("root can not be null");
         if (Files.notExists(root)) ExceptionHandler.throwException("root not exists");
         this.root = root.toString();
-        makeImage();
     }
 
-    public DirectoryStamp(String root) throws RuntimeException {
+    private DirectoryStamp(String root) throws RuntimeException {
         if (root == null) ExceptionHandler.throwException("root can not be null");
         if (Files.notExists(Path.of(root))) ExceptionHandler.throwException("root not exists");
         this.root = root;
-        makeImage();
     }
 
-    private void makeImage() throws RuntimeException {
+    private void readDirectory() throws RuntimeException {
+        try {
+            files = Files.walk(Path.of(root))
+                    .filter(Files::isRegularFile)
+                    .map(path -> new FileStamp(path, readAttributes(path)))
+                    .peek(System.out::println)
+                    .collect(Collectors.toUnmodifiableSet());
+        } catch (IOException e) {
+            ExceptionHandler.outputMessage(e);
+        }
+    }
+
+    private void readDirectoryDeeply() throws RuntimeException {
         try {
             files = Files.walk(Path.of(root))
                     .filter(Files::isRegularFile)
@@ -136,6 +173,14 @@ public class DirectoryStamp implements Serializable {
                 .get();
     }
 
+    public boolean isDeepStump() {
+        return isDeepStump;
+    }
+
+    private void setDeepStump(boolean deepStump) {
+        isDeepStump = deepStump;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -172,4 +217,6 @@ public class DirectoryStamp implements Serializable {
     public int hashCode() {
         return Objects.hash(root, files);
     }
-}
+
+
+ }

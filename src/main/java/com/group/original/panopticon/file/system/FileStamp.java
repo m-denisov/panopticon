@@ -36,9 +36,30 @@ public class FileStamp implements Serializable {
         size = basicFileAttributes.size();
     }
 
+    public FileStamp(Path path, BasicFileAttributes basicFileAttributes) {
+        if (path == null || basicFileAttributes == null || md5 == null || md5.isBlank()) {
+            ExceptionHandler.throwException("null file or attributes");
+        }
+        this.path = path.toString();
+        this.md5 = "";
+        creationTime = toLocalDateTime(basicFileAttributes.creationTime());
+        lastAccessTime = toLocalDateTime(basicFileAttributes.lastAccessTime());
+        lastModifiedTime = toLocalDateTime(basicFileAttributes.lastModifiedTime());
+        size = basicFileAttributes.size();
+    }
+
     public FileStamp(String path, String md5, LocalDateTime creationTime, LocalDateTime lastAccessTime, LocalDateTime lastModifiedTime, long size) {
         this.path = path;
         this.md5 = md5;
+        this.creationTime = creationTime;
+        this.lastAccessTime = lastAccessTime;
+        this.lastModifiedTime = lastModifiedTime;
+        this.size = size;
+    }
+
+    public FileStamp(String path, LocalDateTime creationTime, LocalDateTime lastAccessTime, LocalDateTime lastModifiedTime, long size) {
+        this.path = path;
+        this.md5 = "";
         this.creationTime = creationTime;
         this.lastAccessTime = lastAccessTime;
         this.lastModifiedTime = lastModifiedTime;

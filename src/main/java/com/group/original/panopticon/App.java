@@ -45,8 +45,8 @@ public class App {
 
         System.out.println(Time.formattedDateTime(LocalDateTime.now()));
 
-        DirectoryStamp firstStamp = new DirectoryStamp(first);
-        DirectoryStamp secondStamp = new DirectoryStamp(second);
+        DirectoryStamp firstStamp = DirectoryStamp.stampOf(first);
+        DirectoryStamp secondStamp = DirectoryStamp.stampOf(second);
         Differences differences = new Differences(firstStamp, secondStamp);
         System.out.println(differences);
 
