@@ -22,6 +22,7 @@ public class Differences {
     //    private Set<Path> modifiedFilesForSize = new HashSet<>();
     private FileStampSet modifiedLaterInFirst = new FileStampSet();
     private FileStampSet modifiedLaterInSecond = new FileStampSet();
+    private FileStampSet notModifiedInTime = new FileStampSet();
     private FileStampSet modifiedFilesForMD5 = new FileStampSet();
 
     public Differences(DirectoryStamp firstDir, DirectoryStamp secondDir) {
@@ -72,6 +73,8 @@ public class Differences {
                     modifiedLaterInFirst.add(first);
                 } else if (first.getLastModifiedTime().isBefore(second.getLastModifiedTime())) {
                     modifiedLaterInSecond.add(second);
+                } else {
+                    notModifiedInTime.add(first);
                 }
             }
         }
@@ -118,6 +121,10 @@ public class Differences {
 
     public Set<FileStamp> getModifiedLaterInSecond() {
         return Collections.unmodifiableSet(modifiedLaterInSecond);
+    }
+
+    public FileStampSet getNotModifiedInTime() {
+        return notModifiedInTime;
     }
 
     public Set<FileStamp> getModifiedFilesForMD5() {
