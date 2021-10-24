@@ -2,7 +2,6 @@ package com.group.original.panopticon.file.system;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.file.attrs.Size;
-import com.group.original.panopticon.output.manager.ConsoleOutputManager;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
@@ -65,7 +64,7 @@ public class DirectoryStamp implements Serializable {
         try {
             files = Files.walk(Path.of(root))
                     .filter(Files::isRegularFile)
-                    .map(path -> new FileStamp(path, readAttributes(path)))
+                    .map(path -> new FileStampImpl(path, readAttributes(path)))
                     .peek(System.out::println)
                     .collect(Collectors.toUnmodifiableSet());
         } catch (IOException e) {
@@ -77,7 +76,7 @@ public class DirectoryStamp implements Serializable {
         try {
             files = Files.walk(Path.of(root))
                     .filter(Files::isRegularFile)
-                    .map(path -> new FileStamp(path, readMD5(path), readAttributes(path)))
+                    .map(path -> new FileStampImpl(path, readMD5(path), readAttributes(path)))
                     .peek(System.out::println)
                     .collect(Collectors.toUnmodifiableSet());
         } catch (IOException e) {
