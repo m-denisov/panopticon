@@ -1,7 +1,9 @@
 package com.group.original.panopticon.file.differences;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
+import com.group.original.panopticon.file.collections.FileStampSet;
 import com.group.original.panopticon.file.system.DirectoryStamp;
+import com.group.original.panopticon.file.system.FileStamp;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -14,12 +16,13 @@ public class Differences {
     private DirectoryStamp firstDir;
     private DirectoryStamp secondDir;
 
-    private Set<Path> onlyInFirst = new HashSet<>();
-    private Set<Path> onlyInSecond = new HashSet<>();
+    private FileStampSet onlyInFirst = new FileStampSet();
+    private FileStampSet onlyInSecond = new FileStampSet();
     private Set<Path> common = new HashSet<>();
-//    private Set<Path> modifiedFilesForSize = new HashSet<>();
-    private Set<Path> modifiedFilesForTime = new HashSet<>();
-    private Set<Path> modifiedFilesForMD5 = new HashSet<>();
+    //    private Set<Path> modifiedFilesForSize = new HashSet<>();
+    private FileStampSet modifiedLaterInFirst = new FileStampSet();
+    private FileStampSet modifiedLaterInSecond = new FileStampSet();
+    private FileStampSet modifiedFilesForMD5 = new FileStampSet();
 
     public Differences(DirectoryStamp firstDir, DirectoryStamp secondDir) {
         this.firstDir = firstDir;
@@ -28,60 +31,54 @@ public class Differences {
     }
 
     private void compare() {
-        comparePaths();
-        compareCommonFiles();
+        FileStampSet firstDirFiles = firstDir.getFiles();
+        FileStampSet secondDirFiles = secondDir.getFiles();
+
+        comparePaths(firstDirFiles, secondDirFiles);
+        compareCommonFiles(firstDirFiles, secondDirFiles);
     }
 
-    private void comparePaths() {
-        Set<Path> firstDirPaths = firstDir.getRelativePaths();
-        Set<Path> secondDirPaths = secondDir.getRelativePaths();
-
-        for (Path path : firstDirPaths) {
-            if (secondDirPaths.contains(path)) {
-                common.add(path);
+    private void comparePaths(FileStampSet firstDirFiles, FileStampSet secondDirFiles) {
+        for (FileStamp fileStamp : firstDirFiles) {
+            if (secondDirFiles.contains(fileStamp)) {
+                common.add(fileStamp.getRelativePath());
             } else {
-                onlyInFirst.add(path);
+                onlyInFirst.add(fileStamp);
             }
         }
 
-        for (Path path : secondDirPaths) {
-            if (!common.contains(path)) {
-                onlyInSecond.add(path);
+        for (FileStamp fileStamp : secondDirFiles) {
+            if (!common.contains(fileStamp.getRelativePath())) {
+                onlyInSecond.add(fileStamp);
             }
         }
     }
 
-    private void compareCommonFiles() {
-        compareCommonFilesInTime();
+    private void compareCommonFiles(FileStampSet firstDirFiles, FileStampSet secondDirFiles) {
+        compareCommonFilesInTime(firstDirFiles, secondDirFiles);
+
         if (firstDir.isDeepStump() && secondDir.isDeepStump()) {
             compareCommonFilesInMD5();
         }
-            }
+    }
 
-    private void compareCommonFilesInTime() {
-        try {
-            for (Path path : common) {
-                if (!getLastModifiedTime(firstDir, path).equals(getLastModifiedTime(secondDir, path))) {
-                    modifiedFilesForTime.add(path);
+    private void compareCommonFilesInTime(FileStampSet firstDirFiles, FileStampSet secondDirFiles) {
+
+        for (FileStamp first : firstDirFiles) {
+            if (common.contains(first.getRelativePath())) {
+                FileStamp second = secondDirFiles.get(first.getRelativePath());
+
+                if (first.getLastModifiedTime().isAfter(second.getLastModifiedTime())) {
+                    modifiedLaterInFirst.add(first);
+                } else if (first.getLastModifiedTime().isBefore(second.getLastModifiedTime())) {
+                    modifiedLaterInSecond.add(second);
                 }
-
-
             }
-        } catch (Exception e) {
-            ExceptionHandler.outputMessage(e);
         }
     }
 
     private void compareCommonFilesInMD5() {
-        try {
-            for (Path path : common) {
-                if (!getMD5(firstDir, path).equals(getMD5(secondDir, path))) {
-                    modifiedFilesForMD5.add(path);
-                }
-            }
-        } catch (Exception e) {
-            ExceptionHandler.outputMessage(e);
-        }
+        //TODO
     }
 
 //    private long getSize(DirectoryStamp directoryStamp, Path relativePath) {
@@ -103,11 +100,11 @@ public class Differences {
         return common;
     }
 
-    public Set<Path> getOnlyInFirst() {
+    public Set<FileStamp> getOnlyInFirst() {
         return Collections.unmodifiableSet(onlyInFirst);
     }
 
-    public Set<Path> getOnlyInSecond() {
+    public Set<FileStamp> getOnlyInSecond() {
         return Collections.unmodifiableSet(onlyInSecond);
     }
 
@@ -115,11 +112,15 @@ public class Differences {
 //        return Collections.unmodifiableSet(modifiedFilesForSize);
 //    }
 
-    public Set<Path> getModifiedFilesForTime() {
-        return Collections.unmodifiableSet(modifiedFilesForTime);
+    public Set<FileStamp> getModifiedLaterInFirst() {
+        return Collections.unmodifiableSet(modifiedLaterInFirst);
     }
 
-    public Set<Path> getModifiedFilesForMD5() {
+    public Set<FileStamp> getModifiedLaterInSecond() {
+        return Collections.unmodifiableSet(modifiedLaterInSecond);
+    }
+
+    public Set<FileStamp> getModifiedFilesForMD5() {
         return modifiedFilesForMD5;
     }
 
@@ -128,7 +129,7 @@ public class Differences {
     }
 
     public boolean isEqualsInTime() {
-        return isEqualsOnList() && modifiedFilesForTime.isEmpty();
+        return isEqualsOnList() && modifiedLaterInFirst.isEmpty();
     }
 
 //    public boolean isEqualsInSize() {
@@ -166,9 +167,9 @@ public class Differences {
 //                        .append("\r\n");
 //            }
 //        }
-//        if (modifiedFilesForTime.size() > 0) {
+//        if (modifiedLaterInFirst.size() > 0) {
 //            builder.append("Modified files (for time):\r\n");
-//            for (Path path : modifiedFilesForTime) {
+//            for (Path path : modifiedLaterInFirst) {
 //                builder.append("    ")
 //                        .append(path)
 //                        .append("\r\n");

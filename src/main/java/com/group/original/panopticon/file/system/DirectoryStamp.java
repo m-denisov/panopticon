@@ -2,6 +2,8 @@ package com.group.original.panopticon.file.system;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.file.attrs.Size;
+import com.group.original.panopticon.file.collections.FileStampSet;
+import com.group.original.panopticon.file.collections.UnmodifiedFileStampSet;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
@@ -19,7 +21,7 @@ public class DirectoryStamp implements Serializable {
     private static final long serialVersionUID = 2;
 
     private String root;
-    private Set<FileStamp> files;
+    private FileStampSet files;
     private boolean isDeepStump = false;
 
     public static DirectoryStamp stampOf(Path root) {
@@ -64,9 +66,9 @@ public class DirectoryStamp implements Serializable {
         try {
             files = Files.walk(Path.of(root))
                     .filter(Files::isRegularFile)
-                    .map(path -> new FileStampImpl(path, readAttributes(path)))
+                    .map(path -> new FileStamp(Path.of(root).relativize(path), readAttributes(path)))
                     .peek(System.out::println)
-                    .collect(Collectors.toUnmodifiableSet());
+                    .collect(Collectors.toCollection(FileStampSet::new));
         } catch (IOException e) {
             ExceptionHandler.outputMessage(e);
         }
@@ -76,9 +78,9 @@ public class DirectoryStamp implements Serializable {
         try {
             files = Files.walk(Path.of(root))
                     .filter(Files::isRegularFile)
-                    .map(path -> new FileStampImpl(path, readMD5(path), readAttributes(path)))
+                    .map(path -> new FileStamp(Path.of(root).relativize(path), readMD5(path), readAttributes(path)))
                     .peek(System.out::println)
-                    .collect(Collectors.toUnmodifiableSet());
+                    .collect(Collectors.toCollection(FileStampSet::new));
         } catch (IOException e) {
             ExceptionHandler.outputMessage(e);
         }
@@ -110,8 +112,8 @@ public class DirectoryStamp implements Serializable {
         return DigestUtils.md5Hex(root);
     }
 
-    public Set<FileStamp> getFiles() {
-        return files;
+    public FileStampSet getFiles() {
+        return new UnmodifiedFileStampSet(files);
     }
 
     public String getFormattedSize() {
@@ -147,13 +149,13 @@ public class DirectoryStamp implements Serializable {
 
     public Set<Path> getPaths() {
         return files.stream()
-                .map(FileStamp::getPath)
+                .map(FileStamp::getRelativePath)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
     public Set<Path> getRelativePaths() {
         return files.stream()
-                .map(this::relativizePath)
+                .map(this::relativesPath)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
@@ -161,15 +163,18 @@ public class DirectoryStamp implements Serializable {
         return files.size();
     }
 
-    private Path relativizePath(FileStamp fileStamp) {
-        return Path.of(root).relativize(fileStamp.getPath());
+    private Path relativesPath(FileStamp fileStamp) {
+        return Path.of(root).relativize(fileStamp.getRelativePath());
     }
 
-    private FileStamp getFile(Path path) {
+    public FileStamp getFile(Path path) {
+        if (path == null || Files.notExists(path)) {
+            ExceptionHandler.throwException("path is null of not exist");
+        }
         return files.stream()
-                .filter(fileStamp -> fileStamp.getPath().equals(path))
+                .filter(fileStamp -> fileStamp.getRelativePath().equals(path))
                 .findAny()
-                .get();
+                .orElseThrow();
     }
 
     public boolean isDeepStump() {
@@ -189,7 +194,7 @@ public class DirectoryStamp implements Serializable {
 
         for (FileStamp fileStamp : files) {
             builder.append(" Path: ")
-                    .append(relativizePath(fileStamp))
+                    .append(relativesPath(fileStamp))
                     .append("\r\n")
                     .append("   Last modified time: ")
                     .append(fileStamp.getFormattedLastModifiedTime())
