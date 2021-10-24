@@ -1,7 +1,7 @@
 package com.group.original.panopticon;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
-import com.group.original.panopticon.file.system.Differences;
+import com.group.original.panopticon.file.differences.Differences;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 import com.group.original.panopticon.output.manager.ConsoleOutputManager;
 

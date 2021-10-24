@@ -1,6 +1,7 @@
-package com.group.original.panopticon.file.system;
+package com.group.original.panopticon.file.differences;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
+import com.group.original.panopticon.file.system.DirectoryStamp;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -138,41 +139,41 @@ public class Differences {
         return onlyInFirst.isEmpty() && onlyInSecond.isEmpty();
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Differences {\r\n")
-                .append("First Directory = ")
-                .append(firstDir.getRoot())
-                .append("\r\n")
-                .append("Second Directory = ")
-                .append(secondDir.getRoot())
-                .append("\r\n");
-        System.out.println(builder);
-        if (onlyInSecond.size() > 0) {
-            builder.append("Files that are not in the first directory, but are present in the second:\r\n");
-            for (Path path : onlyInSecond) {
-                builder.append("    ")
-                        .append(path)
-                        .append("\r\n");
-            }
-        }
-        if (onlyInFirst.size() > 0) {
-            builder.append("Files that are not in the second directory, but are present in the first:\r\n");
-            for (Path path : onlyInFirst) {
-                builder.append("    ")
-                        .append(path)
-                        .append("\r\n");
-            }
-        }
-        if (modifiedFilesForTime.size() > 0) {
-            builder.append("Modified files (for time):\r\n");
-            for (Path path : modifiedFilesForTime) {
-                builder.append("    ")
-                        .append(path)
-                        .append("\r\n");
-            }
-        }
+//    @Override
+//    public String toString() {
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("Differences {\r\n")
+//                .append("First Directory = ")
+//                .append(firstDir.getRoot())
+//                .append("\r\n")
+//                .append("Second Directory = ")
+//                .append(secondDir.getRoot())
+//                .append("\r\n");
+//        System.out.println(builder);
+//        if (onlyInSecond.size() > 0) {
+//            builder.append("Files that are not in the first directory, but are present in the second:\r\n");
+//            for (Path path : onlyInSecond) {
+//                builder.append("    ")
+//                        .append(path)
+//                        .append("\r\n");
+//            }
+//        }
+//        if (onlyInFirst.size() > 0) {
+//            builder.append("Files that are not in the second directory, but are present in the first:\r\n");
+//            for (Path path : onlyInFirst) {
+//                builder.append("    ")
+//                        .append(path)
+//                        .append("\r\n");
+//            }
+//        }
+//        if (modifiedFilesForTime.size() > 0) {
+//            builder.append("Modified files (for time):\r\n");
+//            for (Path path : modifiedFilesForTime) {
+//                builder.append("    ")
+//                        .append(path)
+//                        .append("\r\n");
+//            }
+//        }
 //        if (modifiedFilesForSize.size() > 0) {
 //            builder.append("Modified files (for size):\r\n");
 //            for (Path path : modifiedFilesForSize) {
@@ -181,15 +182,15 @@ public class Differences {
 //                        .append("\r\n");
 //            }
 //        }
-        if (modifiedFilesForMD5.size() > 0) {
-            builder.append("Modified files (for md5):\r\n");
-            for (Path path : modifiedFilesForMD5) {
-                builder.append("    ")
-                        .append(path)
-                        .append("\r\n");
-            }
-        }
-        builder.append("}");
-        return builder.toString();
-    }
+//        if (modifiedFilesForMD5.size() > 0) {
+//            builder.append("Modified files (for md5):\r\n");
+//            for (Path path : modifiedFilesForMD5) {
+//                builder.append("    ")
+//                        .append(path)
+//                        .append("\r\n");
+//            }
+//        }
+//        builder.append("}");
+//        return builder.toString();
+//    }
 }
