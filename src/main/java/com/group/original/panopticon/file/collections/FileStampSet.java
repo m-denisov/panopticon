@@ -13,7 +13,7 @@ public class FileStampSet implements Set<FileStamp> {
         files = new HashMap<>();
     }
 
-    public FileStampSet(Set<FileStamp> other) {
+    public FileStampSet(Collection<FileStamp> other) {
         this();
         addAll(other);
     }
