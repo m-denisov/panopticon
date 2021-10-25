@@ -1,16 +1,37 @@
 package com.group.original.panopticon.investigator;
 
-import com.group.original.panopticon.file.collections.FixedArrayList;
+import com.group.original.panopticon.file.matcher.StampMatcher;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DirectoryInvestigator implements Investigator {
 
-    private FixedArrayList fixedSet = new FixedArrayList();
+    private static final long LIFE_TIME = 30; //seconds
+    private static final Map<Path, LocalDateTime> localStamps = new HashMap<>();
+    private static final Map<Path, LocalDateTime> netStamps = new HashMap<>();
+    private DirectoryStamp local;
+    private DirectoryStamp net;
+    private StampMatcher matcher;
 
     @Override
-    public boolean isDiffer(Path local, Path net) {
+    public boolean isDiffer(Path localPath, Path netPath) {
+        if (local == null) {
+            local = DirectoryStamp.stampOf(localPath);
+            localStamps.put(local.getRoot(), LocalDateTime.now());
+        }
+        if (net == null) {
+            net = DirectoryStamp.stampOf(netPath);
+            netStamps.put(net.getRoot(), LocalDateTime.now());
+        }
+        LocalDateTime localTime = localStamps.get(localPath);
+        LocalDateTime netTime = netStamps.get(netPath);
+        if (localTime != null && LocalDateTime.now().minusSeconds(LIFE_TIME).isBefore(localTime)) {
+            // TODO: 25.10.2021
+        }
         return false;
     }
 
@@ -49,25 +70,4 @@ public class DirectoryInvestigator implements Investigator {
         return false;
     }
 
-    private class CompDirs {
-        private DirectoryStamp local;
-        private DirectoryStamp net;
-        private boolean isSingle = false;
-
-        private CompDirs(DirectoryStamp net) {
-            this.net = net;
-
-            isSingle = true;
-        }
-
-        private CompDirs(DirectoryStamp local, DirectoryStamp net) {
-            this.local = local;
-            this.net = net;
-        }
-
-        private boolean isSingle() {
-            return isSingle;
-        }
-
-    }
 }
