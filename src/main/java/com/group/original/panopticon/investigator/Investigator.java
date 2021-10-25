@@ -7,5 +7,5 @@ public interface Investigator {
     boolean isChanged(Path path);
     boolean isStamped(Path path);
     void makeStamp(Path path);
-
+    
 }
