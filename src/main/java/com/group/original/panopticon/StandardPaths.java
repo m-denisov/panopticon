@@ -9,4 +9,6 @@ public class StandardPaths {
 	public static final String PASSPORTS_CATALOG = "Паспорта";
 	public static final String PROJECTS_CATALOG = "Проекты";
 
+	public static final Path MAC_STAMPS = Paths.get("/Users/westtochka/Documents/panopticonTest/stamps");
+
 }

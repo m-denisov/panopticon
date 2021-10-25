@@ -155,16 +155,12 @@ public class DirectoryStamp implements Serializable {
 
     public Set<Path> getRelativePaths() {
         return files.stream()
-                .map(this::relativesPath)
+                .map(FileStamp::getRelativePath)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
     public int getNumberOfFiles() {
         return files.size();
-    }
-
-    private Path relativesPath(FileStamp fileStamp) {
-        return Path.of(root).relativize(fileStamp.getRelativePath());
     }
 
     public FileStamp getFile(Path path) {
@@ -194,7 +190,7 @@ public class DirectoryStamp implements Serializable {
 
         for (FileStamp fileStamp : files) {
             builder.append(" Path: ")
-                    .append(relativesPath(fileStamp))
+                    .append(fileStamp)
                     .append("\r\n")
                     .append("   Last modified time: ")
                     .append(fileStamp.getFormattedLastModifiedTime())
