@@ -1,6 +1,5 @@
-package com.group.original.panopticon.file.differences;
+package com.group.original.panopticon.file.matcher;
 
-import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.file.collections.FileStampSet;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 import com.group.original.panopticon.file.system.FileStamp;
@@ -12,7 +11,7 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-public class Differences {
+public class StampMatcher {
     private DirectoryStamp firstDir;
     private DirectoryStamp secondDir;
 
@@ -25,7 +24,7 @@ public class Differences {
     private FileStampSet notModifiedInTime = new FileStampSet();
     private FileStampSet modifiedFilesForMD5 = new FileStampSet();
 
-    public Differences(DirectoryStamp firstDir, DirectoryStamp secondDir) {
+    public StampMatcher(DirectoryStamp firstDir, DirectoryStamp secondDir) {
         this.firstDir = firstDir;
         this.secondDir = secondDir;
         compare();
