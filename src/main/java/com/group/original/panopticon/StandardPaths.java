@@ -10,5 +10,5 @@ public class StandardPaths {
 	public static final String PROJECTS_CATALOG = "Проекты";
 
 	public static final Path MAC_STAMPS = Paths.get("/Users/westtochka/Documents/panopticonTest/stamps");
-
+	public static final Path WIN_STAMPS = Paths.get("C:\\Users\\m.denisov\\stamps");
 }
