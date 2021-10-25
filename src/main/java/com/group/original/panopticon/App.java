@@ -1,8 +1,6 @@
 package com.group.original.panopticon;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
-import com.group.original.panopticon.file.system.DirectoryStamp;
-import com.group.original.panopticon.file.system.Stamper;
 import com.group.original.panopticon.output.manager.ConsoleOutputManager;
 
 import java.nio.file.Path;
@@ -31,12 +29,12 @@ public class App {
 //            ioException.printStackTrace();
 //        }
 
-        DirectoryStamp mfirstStamp = DirectoryStamp.stampOf(mfirst);
-        System.out.println("__________");
-        Stamper.writeStamp(mfirstStamp);
-        System.out.println("__________");
-        DirectoryStamp read = Stamper.readStamp(mfirst);
-        System.out.println(read);
+//        DirectoryStamp mfirstStamp = DirectoryStamp.stampOf(mfirst);
+//        System.out.println("__________");
+//        Stamper.writeStamp(mfirstStamp);
+//        System.out.println("__________");
+//        DirectoryStamp read = Stamper.readStamp(mfirst);
+//        System.out.println(read);
 
     }
 

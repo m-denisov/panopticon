@@ -135,7 +135,7 @@ public class StampMatcher {
     }
 
     public boolean isEqualsInTime() {
-        return isEqualsOnList() && modifiedLaterInFirst.isEmpty();
+        return isEqualsOnList() && modifiedLaterInFirst.isEmpty() && modifiedLaterInSecond.isEmpty();
     }
 
 //    public boolean isEqualsInSize() {
