@@ -1,12 +1,13 @@
 package com.group.original.panopticon.investigator;
 
+import com.group.original.panopticon.file.collections.FixedArrayList;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 
 import java.nio.file.Path;
 
 public class DirectoryInvestigator implements Investigator {
 
-
+    private FixedArrayList fixedSet = new FixedArrayList();
 
     @Override
     public boolean isDiffer(Path local, Path net) {
@@ -67,5 +68,6 @@ public class DirectoryInvestigator implements Investigator {
         private boolean isSingle() {
             return isSingle;
         }
+
     }
 }
