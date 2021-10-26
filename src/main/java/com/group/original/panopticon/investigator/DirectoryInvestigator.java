@@ -9,29 +9,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DirectoryInvestigator implements Investigator {
-
+    private static final Map<DirectoryStamp, LocalDateTime> localStamps = new HashMap<>();
+    private static final Map<DirectoryStamp, LocalDateTime> netStamps = new HashMap<>();
     private static final long LIFE_TIME = 30; //seconds
-    private static final Map<Path, LocalDateTime> localStamps = new HashMap<>();
-    private static final Map<Path, LocalDateTime> netStamps = new HashMap<>();
+    private boolean isDeepAnalysis;
     private DirectoryStamp local;
     private DirectoryStamp net;
     private StampMatcher matcher;
+
+    public DirectoryInvestigator(AnalysisType analysisType) {
+        isDeepAnalysis = analysisType.isBooleanValue();
+    }
 
     @Override
     public boolean isDiffer(Path localPath, Path netPath) {
         if (local == null) {
             local = DirectoryStamp.stampOf(localPath);
-            localStamps.put(local.getRoot(), LocalDateTime.now());
         }
         if (net == null) {
             net = DirectoryStamp.stampOf(netPath);
-            netStamps.put(net.getRoot(), LocalDateTime.now());
         }
-        LocalDateTime localTime = localStamps.get(localPath);
-        LocalDateTime netTime = netStamps.get(netPath);
-        if (localTime != null && LocalDateTime.now().minusSeconds(LIFE_TIME).isBefore(localTime)) {
-            // TODO: 25.10.2021
-        }
+
+
         return false;
     }
 
@@ -68,6 +67,11 @@ public class DirectoryInvestigator implements Investigator {
     @Override
     public boolean isStamped(Path path) {
         return false;
+    }
+
+    @Override
+    public boolean isDeepAnalysis() {
+        return isDeepAnalysis;
     }
 
 }
