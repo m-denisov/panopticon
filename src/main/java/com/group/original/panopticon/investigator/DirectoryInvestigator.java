@@ -4,11 +4,14 @@ import com.group.original.panopticon.file.matcher.StampMatcher;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
-public class DirectoryInvestigator implements Investigator {
-    private static final StampSet<DirectoryStamp> localStamps = new StampSet<>();
-    private static final StampSet<DirectoryStamp> netStamps = new StampSet<>();
-    private static final long LIFE_TIME = 30; //seconds
+public class DirectoryInvestigator {
+    private static final Map<Path, DirectoryStamp> localStamps = new HashMap<>();
+    private static final Map<Path, DirectoryStamp> netStamps = new HashMap<>();
+//    private static final long LIFE_TIME = 30; //seconds
     private boolean isDeepAnalysis;
     private StampMatcher matcher;
 
@@ -16,7 +19,6 @@ public class DirectoryInvestigator implements Investigator {
         isDeepAnalysis = analysisType.isBooleanValue();
     }
 
-    @Override
     public boolean isDiffer(Path localPath, Path netPath) {
 
 
@@ -24,47 +26,38 @@ public class DirectoryInvestigator implements Investigator {
         return false;
     }
 
-    @Override
     public void printDifferences(Path local, Path net) {
 
     }
 
-    @Override
     public void printIdentical(Path local, Path net) {
 
     }
 
-    @Override
     public boolean isChanged(Path path) {
         return false;
     }
 
-    @Override
     public void printChanges(Path path) {
 
     }
 
-    @Override
     public void printUnchanged(Path path) {
 
     }
 
-    @Override
     public void makeStamp(Path path) {
 
     }
 
-    @Override
     public boolean isSaved(Path path) {
         return false;
     }
 
-    @Override
     public boolean isStamped(Path path) {
         return false;
     }
 
-    @Override
     public boolean isDeepAnalysis() {
         return isDeepAnalysis;
     }
