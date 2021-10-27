@@ -1,16 +1,17 @@
 package com.group.original.panopticon.file.collections;
 
 import com.group.original.panopticon.file.system.FileStamp;
+import com.group.original.panopticon.file.system.Stamp;
 
 import java.util.Collection;
 
-public class UnmodifiedFileStampSet extends FileStampSet {
-    public UnmodifiedFileStampSet(Collection<FileStamp> files) {
+public class UnmodifiedStampSet<E extends Stamp> extends StampSet<E> {
+    public UnmodifiedStampSet(Collection<E> files) {
         super();
     }
 
     @Override
-    public boolean add(FileStamp fileStamp) {
+    public boolean add(E fileStamp) {
         throw new RuntimeException();
     }
 
@@ -30,7 +31,7 @@ public class UnmodifiedFileStampSet extends FileStampSet {
     }
 
     @Override
-    public boolean addAll(Collection<? extends FileStamp> c) {
+    public boolean addAll(Collection<? extends E> c) {
         throw new RuntimeException();
     }
 

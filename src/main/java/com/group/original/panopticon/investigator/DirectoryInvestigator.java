@@ -65,6 +65,11 @@ public class DirectoryInvestigator implements Investigator {
     }
 
     @Override
+    public boolean isSaved(Path path) {
+        return false;
+    }
+
+    @Override
     public boolean isStamped(Path path) {
         return false;
     }

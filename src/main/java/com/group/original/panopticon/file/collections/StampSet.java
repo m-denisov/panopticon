@@ -1,24 +1,24 @@
 package com.group.original.panopticon.file.collections;
 
-import com.group.original.panopticon.file.system.FileStamp;
+import com.group.original.panopticon.file.system.Stamp;
 
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class FileStampSet implements Set<FileStamp> {
-    private Map<Path, FileStamp> files;
+public class StampSet<E extends Stamp> implements Set<E> {
+    protected Map<Path, E> files;
 
-    public FileStampSet() {
+    public StampSet(Collection<E> collection) {
+        this();
+        addAll(collection);
+    }
+
+    public StampSet() {
         files = new HashMap<>();
     }
 
-    public FileStampSet(Collection<FileStamp> other) {
-        this();
-        addAll(other);
-    }
-
-    public FileStamp get(Path path) {
+    public E get(Path path) {
         return files.get(path);
     }
 
@@ -38,7 +38,7 @@ public class FileStampSet implements Set<FileStamp> {
     }
 
     @Override
-    public Iterator<FileStamp> iterator() {
+    public Iterator<E> iterator() {
         return files.values().iterator();
     }
 
@@ -53,16 +53,16 @@ public class FileStampSet implements Set<FileStamp> {
     }
 
     @Override
-    public boolean add(FileStamp fileStamp) {
-        return files.put(fileStamp.getRelativePath(), fileStamp) == null;
+    public boolean add(E stamp) {
+        return files.put(stamp.getPath(), stamp) == null;
     }
 
     @Override
     public boolean remove(Object o) {
         if (o == null) return false;
-        if (!(o instanceof FileStamp)) return false;
-        FileStamp stamp = (FileStamp) o;
-        return files.remove(stamp.getRelativePath(), stamp);
+        if (!(o instanceof Stamp)) return false;
+        Stamp stamp = (Stamp) o;
+        return files.remove(stamp.getPath(), stamp);
     }
 
     @Override
@@ -71,10 +71,10 @@ public class FileStampSet implements Set<FileStamp> {
     }
 
     @Override
-    public boolean addAll(Collection<? extends FileStamp> c) {
+    public boolean addAll(Collection<? extends E> c) {
         int startSize = files.size();
-        for (FileStamp stamp : c) {
-            files.put(stamp.getRelativePath(), stamp);
+        for (E stamp : c) {
+            files.put(stamp.getPath(), stamp);
         }
         return files.size() > startSize;
     }

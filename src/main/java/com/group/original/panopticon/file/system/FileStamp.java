@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class FileStamp implements Serializable {
+public class FileStamp implements Serializable, Stamp {
     private static final long serialVersionUID = 1;
 
     private transient DateTimeFormatter formatter;
@@ -70,7 +70,7 @@ public class FileStamp implements Serializable {
         return Time.ofInstant(fileTime.toInstant());
     }
 
-    public Path getRelativePath() {
+    public Path getPath() {
         return Path.of(relativePath);
     }
 

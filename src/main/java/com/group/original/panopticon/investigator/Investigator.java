@@ -11,7 +11,8 @@ public interface Investigator {
     void printChanges(Path path);
     void printUnchanged(Path path);
     void makeStamp(Path path);
-    boolean isStamped(Path path);
+    boolean isSaved(Path path);
 
+    boolean isStamped(Path path);
     boolean isDeepAnalysis();
 }
