@@ -1,6 +1,8 @@
 package com.group.original.panopticon;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
+import com.group.original.panopticon.investigator.AnalysisType;
+import com.group.original.panopticon.investigator.Investigator;
 import com.group.original.panopticon.output.manager.ConsoleOutputManager;
 
 import java.nio.file.Path;
@@ -35,6 +37,7 @@ public class App {
 //        System.out.println("__________");
 //        DirectoryStamp read = Stamper.readStamp(mfirst);
 //        System.out.println(read);
+
 
     }
 

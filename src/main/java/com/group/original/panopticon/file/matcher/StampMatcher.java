@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class StampMatcher {
+    private LocalDateTime creationTime;
     private DirectoryStamp firstDir;
     private DirectoryStamp secondDir;
 
@@ -27,6 +28,11 @@ public class StampMatcher {
         this.firstDir = firstDir;
         this.secondDir = secondDir;
         compare();
+        creationTime = LocalDateTime.now();
+    }
+
+    public LocalDateTime getCreationTime() {
+        return creationTime;
     }
 
     private void compare() {
