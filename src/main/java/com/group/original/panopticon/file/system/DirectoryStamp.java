@@ -2,8 +2,6 @@ package com.group.original.panopticon.file.system;
 
 import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.file.attrs.Size;
-import com.group.original.panopticon.file.collections.StampSet;
-import com.group.original.panopticon.file.collections.UnmodifiedStampSet;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
@@ -17,11 +15,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DirectoryStamp implements Serializable, Stamp {
+public class DirectoryStamp implements Serializable {
     private static final long serialVersionUID = 2;
     private final String root;
     private LocalDateTime creationTime;
-    private StampSet<FileStamp> files;
+    private Set<FileStamp> files;
     private boolean isDeepStump = false;
 
     public static DirectoryStamp stampOf(Path root) {
@@ -72,7 +70,7 @@ public class DirectoryStamp implements Serializable, Stamp {
                     .filter(Files::isRegularFile)
                     .map(path -> new FileStamp(Path.of(root).relativize(path), readAttributes(path)))
                     .peek(System.out::println)
-                    .collect(Collectors.toCollection(StampSet::new));
+                    .collect(Collectors.toCollection(HashSet::new));
         } catch (IOException e) {
             ExceptionHandler.outputMessage(e);
         }
@@ -84,7 +82,7 @@ public class DirectoryStamp implements Serializable, Stamp {
                     .filter(Files::isRegularFile)
                     .map(path -> new FileStamp(Path.of(root).relativize(path), readMD5(path), readAttributes(path)))
                     .peek(System.out::println)
-                    .collect(Collectors.toCollection(StampSet::new));
+                    .collect(Collectors.toCollection(HashSet::new));
         } catch (IOException e) {
             ExceptionHandler.outputMessage(e);
         }
@@ -108,7 +106,7 @@ public class DirectoryStamp implements Serializable, Stamp {
         }
     }
 
-    public Path getPath() {
+    public Path getRoot() {
         return Path.of(root);
     }
 
@@ -116,8 +114,8 @@ public class DirectoryStamp implements Serializable, Stamp {
         return DigestUtils.md5Hex(root);
     }
 
-    public StampSet<FileStamp> getFiles() {
-        return new UnmodifiedStampSet<>(files);
+    public Set<FileStamp> getFiles() {
+        return Collections.unmodifiableSet(files);
     }
 
     public String getFormattedSize() {
@@ -153,13 +151,13 @@ public class DirectoryStamp implements Serializable, Stamp {
 
     public Set<Path> getPaths() {
         return files.stream()
-                .map(FileStamp::getPath)
+                .map(FileStamp::getRelativePath)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
     public Set<Path> getRelativePaths() {
         return files.stream()
-                .map(FileStamp::getPath)
+                .map(FileStamp::getRelativePath)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
@@ -172,7 +170,7 @@ public class DirectoryStamp implements Serializable, Stamp {
             ExceptionHandler.throwException("path is null of not exist");
         }
         return files.stream()
-                .filter(fileStamp -> fileStamp.getPath().equals(path))
+                .filter(fileStamp -> fileStamp.getRelativePath().equals(path))
                 .findAny()
                 .orElseThrow();
     }

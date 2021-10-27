@@ -1,6 +1,5 @@
 package com.group.original.panopticon.file.matcher;
 
-import com.group.original.panopticon.file.collections.StampSet;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 import com.group.original.panopticon.file.system.FileStamp;
 
@@ -15,14 +14,14 @@ public class StampMatcher {
     private DirectoryStamp firstDir;
     private DirectoryStamp secondDir;
 
-    private StampSet<FileStamp> onlyInFirst = new StampSet<>();
-    private StampSet<FileStamp> onlyInSecond = new StampSet<>();
+    private Set<FileStamp> onlyInFirst = new HashSet<>();
+    private Set<FileStamp> onlyInSecond = new HashSet<>();
     private Set<Path> common = new HashSet<>();
     //    private Set<Path> modifiedFilesForSize = new HashSet<>();
-    private StampSet<FileStamp> modifiedLaterInFirst = new StampSet<>();
-    private StampSet<FileStamp> modifiedLaterInSecond = new StampSet<>();
-    private StampSet<FileStamp> notModifiedInTime = new StampSet<>();
-    private StampSet<FileStamp> modifiedFilesForMD5 = new StampSet<>();
+    private Set<FileStamp> modifiedLaterInFirst = new HashSet<>();
+    private Set<FileStamp> modifiedLaterInSecond = new HashSet<>();
+    private Set<FileStamp> notModifiedInTime = new HashSet<>();
+    private Set<FileStamp> modifiedFilesForMD5 = new HashSet<>();
 
     public StampMatcher(DirectoryStamp firstDir, DirectoryStamp secondDir) {
         this.firstDir = firstDir;
@@ -31,30 +30,30 @@ public class StampMatcher {
     }
 
     private void compare() {
-        StampSet<FileStamp> firstDirFiles = firstDir.getFiles();
-        StampSet<FileStamp> secondDirFiles = secondDir.getFiles();
+        Set<FileStamp> firstDirFiles = firstDir.getFiles();
+        Set<FileStamp> secondDirFiles = secondDir.getFiles();
 
         comparePaths(firstDirFiles, secondDirFiles);
         compareCommonFiles(firstDirFiles, secondDirFiles);
     }
 
-    private void comparePaths(StampSet<FileStamp> firstDirFiles, StampSet<FileStamp> secondDirFiles) {
+    private void comparePaths(Set<FileStamp> firstDirFiles, Set<FileStamp> secondDirFiles) {
         for (FileStamp fileStamp : firstDirFiles) {
             if (secondDirFiles.contains(fileStamp)) {
-                common.add(fileStamp.getPath());
+                common.add(fileStamp.getRelativePath());
             } else {
                 onlyInFirst.add(fileStamp);
             }
         }
 
         for (FileStamp fileStamp : secondDirFiles) {
-            if (!common.contains(fileStamp.getPath())) {
+            if (!common.contains(fileStamp.getRelativePath())) {
                 onlyInSecond.add(fileStamp);
             }
         }
     }
 
-    private void compareCommonFiles(StampSet<FileStamp> firstDirFiles, StampSet<FileStamp> secondDirFiles) {
+    private void compareCommonFiles(Set<FileStamp> firstDirFiles, Set<FileStamp> secondDirFiles) {
         compareCommonFilesInTime(firstDirFiles, secondDirFiles);
 
         if (firstDir.isDeepStump() && secondDir.isDeepStump()) {
@@ -62,11 +61,11 @@ public class StampMatcher {
         }
     }
 
-    private void compareCommonFilesInTime(StampSet<FileStamp> firstDirFiles, StampSet<FileStamp> secondDirFiles) {
+    private void compareCommonFilesInTime(Set<FileStamp> firstDirFiles, Set<FileStamp> secondDirFiles) {
 
         for (FileStamp first : firstDirFiles) {
-            if (common.contains(first.getPath())) {
-                FileStamp second = secondDirFiles.get(first.getPath());
+            if (common.contains(first.getRelativePath())) {
+                FileStamp second = getFromRelativePath(secondDirFiles, first.getRelativePath());
 
                 if (first.getLastModifiedTime().isAfter(second.getLastModifiedTime())) {
                     modifiedLaterInFirst.add(first);
@@ -79,6 +78,13 @@ public class StampMatcher {
         }
     }
 
+    private FileStamp getFromRelativePath(Set<FileStamp> fileStamps, Path relativePath) {
+        return fileStamps.stream()
+                .filter(fileStamp -> fileStamp.getRelativePath().equals(relativePath))
+                .findFirst()
+                .orElseThrow();
+    }
+
     private void compareCommonFilesInMD5() {
         //TODO
     }
@@ -89,12 +95,12 @@ public class StampMatcher {
 //    }
 
     private LocalDateTime getLastModifiedTime(DirectoryStamp directoryStamp, Path relativePath) throws NoSuchElementException {
-        Path root = directoryStamp.getPath();
+        Path root = directoryStamp.getRoot();
         return directoryStamp.getFileLastModifiedTime(root.resolve(relativePath));
     }
 
     private String getMD5(DirectoryStamp directoryStamp, Path relativePath) throws NoSuchElementException {
-        Path root = directoryStamp.getPath();
+        Path root = directoryStamp.getRoot();
         return directoryStamp.getMD5(root.resolve(relativePath));
     }
 
