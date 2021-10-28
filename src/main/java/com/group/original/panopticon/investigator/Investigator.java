@@ -2,10 +2,10 @@ package com.group.original.panopticon.investigator;
 
 import com.group.original.panopticon.file.matcher.StampMatcher;
 import com.group.original.panopticon.file.system.DirectoryStamp;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -13,16 +13,19 @@ import java.util.Objects;
 public class Investigator {
     private static final Map<Path, DirectoryStamp> localStamps = new HashMap<>();
     private static final Map<Path, DirectoryStamp> netStamps = new HashMap<>();
-//    private static final long LIFE_TIME = 30; //seconds
-    private boolean isDeepAnalysis;
+    private static final long LIFE_TIME = 1;
+    private static final ChronoUnit LIFE_TIME_UNIT = ChronoUnit.MINUTES;
+//    private boolean isDeepAnalysis;
     private Map<Connection, StampMatcher> matchers;
 
-    public Investigator(AnalysisType analysisType) {
-        isDeepAnalysis = analysisType.isBooleanValue();
-    }
+//    public Investigator(AnalysisType analysisType) {
+//        isDeepAnalysis = analysisType.isBooleanValue();
+//    }
 
     public boolean isDiffer(Path localPath, Path netPath) {
+        if (isMatched(localPath, netPath)) {
 
+        }
 
 
         return false;
@@ -56,13 +59,9 @@ public class Investigator {
         return false;
     }
 
-    public boolean isStamped(Path path) {
-        return false;
-    }
-
-    public boolean isDeepAnalysis() {
-        return isDeepAnalysis;
-    }
+//    public boolean isDeepAnalysis() {
+//        return isDeepAnalysis;
+//    }
 
     private String makeStringForPaths(Path local, Path net) {
         return local.toString() + net.toString();
@@ -70,6 +69,15 @@ public class Investigator {
 
     private boolean isMatched(Path local, Path net) {
         return matchers.get(new Connection(local, net)) != null;
+    }
+
+    private boolean isFresh(LocalDateTime localDateTime) {
+        return LocalDateTime.now().isBefore(localDateTime.plus(LIFE_TIME, LIFE_TIME_UNIT));
+    }
+
+    public boolean isStamped(Path path) {
+        // TODO: 28.10.2021
+        return false;
     }
 
     private class Connection {
@@ -80,6 +88,8 @@ public class Investigator {
             this.first = first.toString();
             this.second = second.toString();
         }
+
+
 
         @Override
         public boolean equals(Object o) {
