@@ -110,10 +110,6 @@ public class DirectoryStamp implements Serializable {
         return Path.of(root);
     }
 
-    public String getRootAsMD5() {
-        return DigestUtils.md5Hex(root);
-    }
-
     public Set<FileStamp> getFiles() {
         return Collections.unmodifiableSet(files);
     }

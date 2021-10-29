@@ -41,15 +41,32 @@ public class App {
 //        DirectoryStamp read = Stamper.readStamp(mfirst);
 //        System.out.println(read);
 
-        Desktop desktop = Desktop.getDesktop();
-        File file = new File("C:\\Users\\m.denisov\\Documents\\Проекты\\Энгельс\\Энгельс Паспорта\\в новой рамке\\И7.159.00.000ПС (21.051, 000350) перемотчик.pdf");
-        try {
-            desktop.open(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        Desktop desktop = Desktop.getDesktop();
+//        File file = new File("C:\\Users\\m.denisov\\Documents\\Проекты\\Энгельс\\Энгельс Паспорта\\в новой рамке\\И7.159.00.000ПС (21.051, 000350) перемотчик.pdf");
+//        try {
+//            desktop.open(file);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
+
+        System.out.println(System.getProperty("os.name"));
     }
+
+    //    public void printDifferences(Path local, Path net) {
+//
+//    }
+//
+//    public void printIdentical(Path local, Path net) {
+//
+//    }
+//    public void printChanges(Path path) {
+//
+//    }
+//
+//    public void printUnchanged(Path path) {
+//
+//    }
 
     private static void initServices() {
         ExceptionHandler.registerOutputManager(new ConsoleOutputManager());

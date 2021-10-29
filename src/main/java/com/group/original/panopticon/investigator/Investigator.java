@@ -3,6 +3,7 @@ package com.group.original.panopticon.investigator;
 import com.group.original.panopticon.file.differences.Differences;
 import com.group.original.panopticon.file.matcher.StampMatcher;
 import com.group.original.panopticon.file.system.DirectoryStamp;
+import com.group.original.panopticon.file.system.Stamper;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -13,85 +14,72 @@ import java.util.Objects;
 
 public class Investigator {
     private static final Map<Path, DirectoryStamp> stamps = new HashMap<>();
-//    private static final Map<Path, DirectoryStamp> netStamps = new HashMap<>();
     private static final long LIFE_TIME = 1;
     private static final ChronoUnit LIFE_TIME_UNIT = ChronoUnit.MINUTES;
-    //    private boolean isDeepAnalysis;
     private Map<Connection, StampMatcher> matchers;
 
     public Differences getDifferences(Path localPath, Path netPath) {
         Connection connection = new Connection(localPath, netPath);
+        if (!isMatched(connection)) {
+            DirectoryStamp local = getStamp(localPath);
+            DirectoryStamp net = getStamp(netPath);
+            return compareStamps(local, net);
+        }
+        return Differences.of(matchers.get(connection), getOrder(connection));
+    }
 
-
-        return null;
+    private boolean isMatched(Connection connection) {
+        return matchers.get(connection) != null;
     }
 
     public Differences compare(Path localPath, Path netPath) {
         DirectoryStamp local = DirectoryStamp.stampOf(localPath);
         DirectoryStamp net = DirectoryStamp.stampOf(netPath);
-        StampMatcher matcher = new StampMatcher(local, net);
+        return compareStamps(local, net);
+    }
 
-        stamps.put(localPath, local);
-        stamps.put(netPath, net);
-        matchers.put(new Connection(localPath, netPath), matcher);
+    private Differences compareStamps(DirectoryStamp local, DirectoryStamp net) {
+        StampMatcher matcher = new StampMatcher(local, net);
+        Connection connection = new Connection(local.getRoot(), net.getRoot());
+
+        stamps.put(local.getRoot(), local);
+        stamps.put(net.getRoot(), net);
+        matchers.put(connection, matcher);
+
         return Differences.of(matcher, Differences.Order.DIRECT);
     }
 
-    private boolean isContainsInReversOrder(Map<Path, DirectoryStamp> stamps, DirectoryStamp stamp) {
-        return false;
+    private Differences.Order getOrder(Connection connection) {
+        if (matchers.containsKey(connection)) {
+            Connection oldConnection = matchers.keySet().stream()
+                    .filter(c -> c.equals(connection))
+                    .findFirst()
+                    .get();
+            if (connection.isReverseOf(oldConnection)) {
+                return Differences.Order.REVERSE;
+            }
+        }
+        return Differences.Order.DIRECT;
     }
 
-//    public void printDifferences(Path local, Path net) {
-//
-//    }
-//
-//    public void printIdentical(Path local, Path net) {
-//
-//    }
-
-    public boolean isChanged(Path path) {
-        return false;
+    private DirectoryStamp getStamp(Path path) {
+        DirectoryStamp stamp = stamps.get(path);
+        if (stamp == null) {
+            stamp = DirectoryStamp.stampOf(path);
+        }
+        return stamp;
     }
 
-//    public void printChanges(Path path) {
-//
-//    }
-//
-//    public void printUnchanged(Path path) {
-//
-//    }
+    public Differences getChanges(Path path) {
+        return null;
+    }
 
     public void makeStamp(Path path) {
 
     }
 
     public boolean isSaved(Path path) {
-        return false;
-    }
-
-//    public boolean isDeepAnalysis() {
-//        return isDeepAnalysis;
-//    }
-
-    private String makeStringForPaths(Path local, Path net) {
-        return local.toString() + net.toString();
-    }
-
-    public boolean isMatched(Path local, Path net) {
-        return matchers.get(new Connection(local, net)) != null;
-    }
-
-    private boolean isMatched(Path net) {
-        return matchers.get(new Connection(net, net)) != null;
-    }
-
-    private boolean isFresh(LocalDateTime localDateTime) {
-        return LocalDateTime.now().isBefore(localDateTime.plus(LIFE_TIME, LIFE_TIME_UNIT));
-    }
-
-    public boolean isStamped(Path path) {
-        // TODO: 28.10.2021
-        return false;
+        return Stamper.isStamped(path);
     }
 
     private class Connection {
