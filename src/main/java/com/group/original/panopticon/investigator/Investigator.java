@@ -1,5 +1,6 @@
 package com.group.original.panopticon.investigator;
 
+import com.group.original.panopticon.file.differences.Differences;
 import com.group.original.panopticon.file.matcher.StampMatcher;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 
@@ -11,45 +12,54 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Investigator {
-    private static final Map<Path, DirectoryStamp> localStamps = new HashMap<>();
-    private static final Map<Path, DirectoryStamp> netStamps = new HashMap<>();
+    private static final Map<Path, DirectoryStamp> stamps = new HashMap<>();
+//    private static final Map<Path, DirectoryStamp> netStamps = new HashMap<>();
     private static final long LIFE_TIME = 1;
     private static final ChronoUnit LIFE_TIME_UNIT = ChronoUnit.MINUTES;
-//    private boolean isDeepAnalysis;
+    //    private boolean isDeepAnalysis;
     private Map<Connection, StampMatcher> matchers;
 
-//    public Investigator(AnalysisType analysisType) {
-//        isDeepAnalysis = analysisType.isBooleanValue();
-//    }
-
-    public boolean isDiffer(Path localPath, Path netPath) {
-        if (isMatched(localPath, netPath)) {
-
-        }
+    public Differences getDifferences(Path localPath, Path netPath) {
+        Connection connection = new Connection(localPath, netPath);
 
 
+        return null;
+    }
+
+    public Differences compare(Path localPath, Path netPath) {
+        DirectoryStamp local = DirectoryStamp.stampOf(localPath);
+        DirectoryStamp net = DirectoryStamp.stampOf(netPath);
+        StampMatcher matcher = new StampMatcher(local, net);
+
+        stamps.put(localPath, local);
+        stamps.put(netPath, net);
+        matchers.put(new Connection(localPath, netPath), matcher);
+        return Differences.of(matcher, Differences.Order.DIRECT);
+    }
+
+    private boolean isContainsInReversOrder(Map<Path, DirectoryStamp> stamps, DirectoryStamp stamp) {
         return false;
     }
 
-    public void printDifferences(Path local, Path net) {
-
-    }
-
-    public void printIdentical(Path local, Path net) {
-
-    }
+//    public void printDifferences(Path local, Path net) {
+//
+//    }
+//
+//    public void printIdentical(Path local, Path net) {
+//
+//    }
 
     public boolean isChanged(Path path) {
         return false;
     }
 
-    public void printChanges(Path path) {
-
-    }
-
-    public void printUnchanged(Path path) {
-
-    }
+//    public void printChanges(Path path) {
+//
+//    }
+//
+//    public void printUnchanged(Path path) {
+//
+//    }
 
     public void makeStamp(Path path) {
 
@@ -67,8 +77,12 @@ public class Investigator {
         return local.toString() + net.toString();
     }
 
-    private boolean isMatched(Path local, Path net) {
+    public boolean isMatched(Path local, Path net) {
         return matchers.get(new Connection(local, net)) != null;
+    }
+
+    private boolean isMatched(Path net) {
+        return matchers.get(new Connection(net, net)) != null;
     }
 
     private boolean isFresh(LocalDateTime localDateTime) {
@@ -89,7 +103,12 @@ public class Investigator {
             this.second = second.toString();
         }
 
-
+        public boolean isReverseOf(Connection that) {
+            if (this.equals(that)) {
+                return this.first.equals(that.second);
+            }
+            return false;
+        }
 
         @Override
         public boolean equals(Object o) {

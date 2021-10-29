@@ -5,6 +5,9 @@ import com.group.original.panopticon.investigator.AnalysisType;
 import com.group.original.panopticon.investigator.Investigator;
 import com.group.original.panopticon.output.manager.ConsoleOutputManager;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class App {
@@ -38,6 +41,13 @@ public class App {
 //        DirectoryStamp read = Stamper.readStamp(mfirst);
 //        System.out.println(read);
 
+        Desktop desktop = Desktop.getDesktop();
+        File file = new File("C:\\Users\\m.denisov\\Documents\\Проекты\\Энгельс\\Энгельс Паспорта\\в новой рамке\\И7.159.00.000ПС (21.051, 000350) перемотчик.pdf");
+        try {
+            desktop.open(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

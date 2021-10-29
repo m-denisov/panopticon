@@ -111,7 +111,7 @@ public class StampMatcher {
     }
 
     public Set<Path> getCommon() {
-        return common;
+        return Collections.unmodifiableSet(common);
     }
 
     public Set<FileStamp> getOnlyInFirst() {
