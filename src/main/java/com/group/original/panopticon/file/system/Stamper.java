@@ -35,16 +35,9 @@ public class Stamper {
 
     private static String getStampPath(Path directoryPath) {
         String stampName = DigestUtils.md5Hex(directoryPath.toString()) + ".stamp";
-        return getStandardStampsPath()
+        return StandardPaths.getStampsPath()
                 .resolve(stampName)
                 .toString();
-    }
-
-    public static Path getStandardStampsPath() {
-        if (System.getProperty("os.name").toLowerCase().contains(WIN_OS_NAME_PREFIX)) {
-            return StandardPaths.WIN_STAMPS;
-        }
-        return StandardPaths.MAC_STAMPS;
     }
 
     public static boolean isStamped(Path directoryPath) {

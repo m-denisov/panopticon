@@ -8,9 +8,5 @@ import java.nio.file.Path;
 
 public class StamperTest extends TestCase {
 
-    public void testGetStandardStampsPath() {
-        Path path = StandardPaths.MAC_STAMPS;
-//        System.out.println(System.getProperty("os.name"));
-        Assert.assertEquals(path, Stamper.getStandardStampsPath());
-    }
+
 }

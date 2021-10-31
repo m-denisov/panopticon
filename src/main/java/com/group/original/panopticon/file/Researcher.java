@@ -1,4 +1,4 @@
-package com.group.original.panopticon;
+package com.group.original.panopticon.file;
 
 import com.group.original.panopticon.file.differences.Differences;
 import com.group.original.panopticon.file.differences.ComparisonOrder;
