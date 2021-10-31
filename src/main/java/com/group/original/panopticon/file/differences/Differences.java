@@ -10,13 +10,13 @@ public class Differences {
     private final StampMatcher matcher;
     private final boolean isDirectOrder;
 
-    private Differences(StampMatcher matcher, Order order) {
+    private Differences(StampMatcher matcher, ComparisonOrder comparisonOrder) {
         this.matcher = matcher;
-        this.isDirectOrder = order.isDirect();
+        this.isDirectOrder = comparisonOrder.isDirect();
     }
 
-    public static Differences of(StampMatcher matcher, Order order) {
-        return new Differences(matcher, order);
+    public static Differences of(StampMatcher matcher, ComparisonOrder comparisonOrder) {
+        return new Differences(matcher, comparisonOrder);
     }
 
     public boolean isDirectOrder() {
@@ -78,18 +78,4 @@ public class Differences {
     }
 
 
-    public enum Order {
-        DIRECT(true),
-        REVERSE(false);
-
-        private boolean isDirect;
-
-        public boolean isDirect() {
-            return isDirect;
-        }
-
-        private Order(boolean isDirect) {
-            this.isDirect = isDirect;
-        }
-    }
 }

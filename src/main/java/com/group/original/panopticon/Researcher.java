@@ -1,12 +1,12 @@
-package com.group.original.panopticon.investigator;
+package com.group.original.panopticon;
 
 import com.group.original.panopticon.file.differences.Differences;
+import com.group.original.panopticon.file.differences.ComparisonOrder;
 import com.group.original.panopticon.file.matcher.StampMatcher;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 import com.group.original.panopticon.file.system.Stamper;
 
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,20 +46,20 @@ public class Researcher {
         stamps.put(net.getRoot(), net);
         matchers.put(connection, matcher);
 
-        return Differences.of(matcher, Differences.Order.DIRECT);
+        return Differences.of(matcher, ComparisonOrder.DIRECT);
     }
 
-    private Differences.Order getOrder(Connection connection) {
+    private ComparisonOrder getOrder(Connection connection) {
         if (matchers.containsKey(connection)) {
             Connection oldConnection = matchers.keySet().stream()
                     .filter(c -> c.equals(connection))
                     .findFirst()
                     .get();
             if (connection.isReverseOf(oldConnection)) {
-                return Differences.Order.REVERSE;
+                return ComparisonOrder.REVERSE;
             }
         }
-        return Differences.Order.DIRECT;
+        return ComparisonOrder.DIRECT;
     }
 
     private DirectoryStamp getStamp(Path path) {
