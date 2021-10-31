@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class Investigator {
+public class Researcher {
     private static final Map<Path, DirectoryStamp> stamps = new HashMap<>();
     private static final long LIFE_TIME = 1;
     private static final ChronoUnit LIFE_TIME_UNIT = ChronoUnit.MINUTES;

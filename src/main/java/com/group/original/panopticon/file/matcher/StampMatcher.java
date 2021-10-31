@@ -150,6 +150,14 @@ public class StampMatcher {
         return isEqualsOnList() && modifiedLaterInFirst.isEmpty() && modifiedLaterInSecond.isEmpty();
     }
 
+    public Path getFirstDirPath() {
+        return firstDir.getRoot();
+    }
+
+    public Path getSecondDirPath() {
+        return secondDir.getRoot();
+    }
+
 //    public boolean isEqualsInSize() {
 //        return isEqualsOnList() && modifiedFilesForSize.isEmpty();
 //    }

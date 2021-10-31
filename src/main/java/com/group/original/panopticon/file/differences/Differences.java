@@ -63,6 +63,20 @@ public class Differences {
         return matcher.getCommon();
     }
 
+    public Path getFirstDirPath() {
+        if (isDirectOrder) {
+            return matcher.getFirstDirPath();
+        }
+        return matcher.getSecondDirPath();
+    }
+
+    public Path getSecondDirPath() {
+        if (isDirectOrder) {
+            return matcher.getSecondDirPath();
+        }
+        return matcher.getFirstDirPath();
+    }
+
 
     public enum Order {
         DIRECT(true),
