@@ -8,11 +8,11 @@ import java.util.Set;
 
 public class Differences {
     private final StampMatcher matcher;
-    private final boolean isDirectOrder;
+    private final ComparisonOrder comparisonOrder;
 
     private Differences(StampMatcher matcher, ComparisonOrder comparisonOrder) {
         this.matcher = matcher;
-        this.isDirectOrder = comparisonOrder.isDirect();
+        this.comparisonOrder = comparisonOrder;
     }
 
     public static Differences of(StampMatcher matcher, ComparisonOrder comparisonOrder) {
@@ -20,7 +20,7 @@ public class Differences {
     }
 
     public boolean isDirectOrder() {
-        return isDirectOrder;
+        return comparisonOrder.isDirect();
     }
 
     public boolean isEmpty() {
@@ -28,7 +28,7 @@ public class Differences {
     }
 
     public Set<FileStamp> getOnlyInFirst() {
-        if (isDirectOrder) {
+        if (comparisonOrder.isDirect()) {
             return matcher.getOnlyInFirst();
         } else {
             return matcher.getOnlyInSecond();
@@ -36,7 +36,7 @@ public class Differences {
     }
 
     public Set<FileStamp> getOnlyInSecond() {
-        if (isDirectOrder) {
+        if (comparisonOrder.isDirect()) {
             return matcher.getOnlyInSecond();
         } else {
             return matcher.getOnlyInFirst();
@@ -44,7 +44,7 @@ public class Differences {
     }
 
     public Set<FileStamp> getModifiedLateInFirst() {
-        if (isDirectOrder) {
+        if (comparisonOrder.isDirect()) {
             return matcher.getModifiedLaterInFirst();
         } else {
             return matcher.getModifiedLaterInSecond();
@@ -52,7 +52,7 @@ public class Differences {
     }
 
     public Set<FileStamp> getModifiedLateInSecond() {
-        if (isDirectOrder) {
+        if (comparisonOrder.isDirect()) {
             return matcher.getModifiedLaterInSecond();
         } else {
             return matcher.getModifiedLaterInFirst();
@@ -64,14 +64,14 @@ public class Differences {
     }
 
     public Path getFirstDirPath() {
-        if (isDirectOrder) {
+        if (comparisonOrder.isDirect()) {
             return matcher.getFirstDirPath();
         }
         return matcher.getSecondDirPath();
     }
 
     public Path getSecondDirPath() {
-        if (isDirectOrder) {
+        if (comparisonOrder.isDirect()) {
             return matcher.getSecondDirPath();
         }
         return matcher.getFirstDirPath();

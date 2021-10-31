@@ -1,4 +1,4 @@
 package com.group.original.panopticon;
 
-public class Args {
+public class Modifiers {
 }
