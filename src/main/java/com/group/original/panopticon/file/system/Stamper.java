@@ -40,7 +40,7 @@ public class Stamper {
                 .toString();
     }
 
-    private static Path getStandardStampsPath() {
+    public static Path getStandardStampsPath() {
         if (System.getProperty("os.name").toLowerCase().contains(WIN_OS_NAME_PREFIX)) {
             return StandardPaths.WIN_STAMPS;
         }
