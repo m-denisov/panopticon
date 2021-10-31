@@ -1,4 +1,4 @@
-package com.group.original.panopticon.file.differences;
+package com.group.original.panopticon.file;
 
 public enum TransferOrder {
     DIRECT(true),

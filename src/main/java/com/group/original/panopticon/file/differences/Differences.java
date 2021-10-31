@@ -1,5 +1,6 @@
 package com.group.original.panopticon.file.differences;
 
+import com.group.original.panopticon.file.ComparisonOrder;
 import com.group.original.panopticon.file.matcher.StampMatcher;
 import com.group.original.panopticon.file.system.FileStamp;
 
