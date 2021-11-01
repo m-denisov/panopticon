@@ -8,6 +8,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Set;
 
 public class Copier {
@@ -50,9 +51,21 @@ public class Copier {
     }
 
     public static void openCopy(Path fullPath) {
+        String extension;
+        String fileName = fullPath.getFileName().toString();
+        System.out.println(fileName);
+        if (fileName.contains(".")) {
+            String[] nameParts = fileName.split("[.]");
+            System.out.println(Arrays.toString(nameParts));
+            extension = "." + nameParts[nameParts.length-1];
+        } else extension = "";
+
         try {
-            Path path = Files.createTempFile( "temp-", "-copy");
-            Desktop.getDesktop().open(path.toFile());
+            Path temp = Files.createTempFile( "temp-", "-copy" + extension);
+            Files.deleteIfExists(temp);
+            Files.copy(fullPath, temp);
+            System.out.println(temp);
+            Desktop.getDesktop().open(temp.toFile());
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
