@@ -4,7 +4,7 @@ public enum TransferOrder {
     DIRECT(true),
     REVERS(false);
 
-    private boolean isDirect;
+    private final boolean isDirect;
 
     public boolean isDirect() {
         return isDirect;
@@ -15,7 +15,7 @@ public enum TransferOrder {
         return DIRECT;
     }
 
-    private TransferOrder(boolean isDirect) {
+    TransferOrder(boolean isDirect) {
         this.isDirect = isDirect;
     }
 }

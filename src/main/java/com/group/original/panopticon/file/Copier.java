@@ -11,20 +11,30 @@ import java.util.Arrays;
 import java.util.Set;
 
 public class Copier {
-    public static void transferAll(Differences differences, TransferOrder transferOrder) {
+    private Path sourceRoot;
+    private Path targetRoot;
+    private Set<FileStamp> fileStamps;
+
+    public void swapAll(Differences differences, TransferOrder transferOrder) {
         transferFilesOnlyInOnePath(differences, transferOrder);
         transferFilesOnlyInOnePath(differences, transferOrder.getOpposite());
-        transferChangedFiles(differences, transferOrder);
+        swapModifiedFilesInBothDirections(differences);
     }
 
-    public static void transferFilesOnlyInOnePath(Differences differences, TransferOrder transferOrder) {
+    public void transferFilesOnlyInOnePath(Differences differences, TransferOrder transferOrder) {
+        fillPathFields(differences, transferOrder);
+        Set<FileStamp> onlyInOne = transferOrder.isDirect() ? differences.getOnlyInFirst() : differences.getOnlyInSecond();
+        transfer(onlyInOne);
+    }
+
+    private void fillPathFields(Differences differences, TransferOrder transferOrder) {
         boolean isDirect = transferOrder.isDirect();
-        Path sourceRoot = isDirect ? differences.getFirstDirPath() : differences.getSecondDirPath();
-        Path targetRoot = isDirect ? differences.getSecondDirPath() : differences.getFirstDirPath();
+        sourceRoot = isDirect ? differences.getFirstDirPath() : differences.getSecondDirPath();
+        targetRoot = isDirect ? differences.getSecondDirPath() : differences.getFirstDirPath();
+    }
 
-        Set<FileStamp> onlyInSource = isDirect ? differences.getOnlyInFirst() : differences.getOnlyInSecond();
-
-        for (FileStamp fileStamp : onlyInSource) {
+    private void transfer(Set<FileStamp> fileStamps) {
+        for (FileStamp fileStamp : fileStamps) {
             Path sourcePath = sourceRoot.resolve(fileStamp.getRelativePath());
             Path targetPath = targetRoot.resolve(fileStamp.getRelativePath());
 
@@ -44,15 +54,33 @@ public class Copier {
         }
     }
 
-    public static void transferChangedFiles(Differences differences, TransferOrder transferOrder) {
+    public void swapModifiedFilesInBothDirections(Differences differences) {
+        fillPathFields(differences, TransferOrder.DIRECT);
+
+        Set<FileStamp> modifiedLateInFirst = differences.getModifiedLateInFirst();
+        transfer(modifiedLateInFirst);
+
+        fillPathFields(differences, TransferOrder.REVERS);
+        Set<FileStamp> modifiedLateInSecond = differences.getModifiedLateInSecond();
+        transfer(modifiedLateInSecond);
+    }
+
+    public void transferModifiedFiles(Differences differences, TransferOrder transferOrder) {
+        boolean isDirect = transferOrder.isDirect();
+        Path sourceRoot = isDirect ? differences.getFirstDirPath() : differences.getSecondDirPath();
+        Path targetRoot = isDirect ? differences.getSecondDirPath() : differences.getFirstDirPath();
+
+        Set<FileStamp> onlyInSource = isDirect ? differences.getOnlyInFirst() : differences.getOnlyInSecond();
+
 
     }
 
-    public static void transfer(Path path, TransferOrder transferOrder) {
-
+    public void transferFile(Path path, TransferOrder transferOrder) {
+        String fileName = path.getFileName().toString();
+        // TODO: 04.11.2021  
     }
 
-    public static void openCopy(Path fullPath) {
+    public void openCopy(Path fullPath) {
         String extension;
         String fileName = fullPath.getFileName().toString();
         System.out.println(fileName);

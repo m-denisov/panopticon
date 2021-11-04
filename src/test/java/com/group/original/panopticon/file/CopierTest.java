@@ -16,7 +16,7 @@ public class CopierTest extends TestCase{
         super.setUp();
     }
 
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     public void testTransferAll() {
@@ -43,6 +43,6 @@ public class CopierTest extends TestCase{
 //        }
 
 
-        Copier.openCopy(path);
+//        Copier.openCopy(path);
     }
 }
