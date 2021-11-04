@@ -10,6 +10,11 @@ public enum TransferOrder {
         return isDirect;
     }
 
+    public TransferOrder getOpposite() {
+        if (this == DIRECT) return REVERS;
+        return DIRECT;
+    }
+
     private TransferOrder(boolean isDirect) {
         this.isDirect = isDirect;
     }

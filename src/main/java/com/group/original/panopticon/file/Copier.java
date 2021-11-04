@@ -1,6 +1,5 @@
 package com.group.original.panopticon.file;
 
-import com.group.original.panopticon.StandardPaths;
 import com.group.original.panopticon.file.differences.Differences;
 import com.group.original.panopticon.file.system.FileStamp;
 
@@ -12,30 +11,33 @@ import java.util.Arrays;
 import java.util.Set;
 
 public class Copier {
-    public static final String TEMP_FILE_PREFIX = "temp-";
-
     public static void transferAll(Differences differences, TransferOrder transferOrder) {
-        transferNewFiles(differences, transferOrder);
+        transferFilesOnlyInOnePath(differences, transferOrder);
+        transferFilesOnlyInOnePath(differences, transferOrder.getOpposite());
         transferChangedFiles(differences, transferOrder);
     }
 
-    public static void transferNewFiles(Differences differences, TransferOrder transferOrder) {
+    public static void transferFilesOnlyInOnePath(Differences differences, TransferOrder transferOrder) {
         boolean isDirect = transferOrder.isDirect();
-        Path fromRoot = isDirect ? differences.getFirstDirPath() : differences.getSecondDirPath();
-        Path toRoot = isDirect ? differences.getSecondDirPath() : differences.getFirstDirPath();
+        Path sourceRoot = isDirect ? differences.getFirstDirPath() : differences.getSecondDirPath();
+        Path targetRoot = isDirect ? differences.getSecondDirPath() : differences.getFirstDirPath();
 
-        Set<FileStamp> onlyInFrom = isDirect ? differences.getOnlyInFirst() : differences.getOnlyInSecond();
+        Set<FileStamp> onlyInSource = isDirect ? differences.getOnlyInFirst() : differences.getOnlyInSecond();
 
-        for (FileStamp fileStamp : onlyInFrom) {
-            Path fromPath = fromRoot.resolve(fileStamp.getRelativePath());
-            Path toPath = toRoot.resolve(fileStamp.getRelativePath());
+        for (FileStamp fileStamp : onlyInSource) {
+            Path sourcePath = sourceRoot.resolve(fileStamp.getRelativePath());
+            Path targetPath = targetRoot.resolve(fileStamp.getRelativePath());
+
             String fileName = fileStamp.getRelativePath().getFileName().toString();
-            String tempFileSuffix = fileName.concat("-").concat(fileStamp.getFormattedLastModifiedTime());
+            String oldFileName = fileStamp.getFormattedLastModifiedTime().concat("-").concat(fileName);
+            Path oldVersion = Path.of(oldFileName);
 
             try {
-                Path temp = Files.createTempFile(StandardPaths.getTempsPath(), TEMP_FILE_PREFIX, tempFileSuffix);
-                Files.copy(toPath, temp);
-                Files.copy(fromPath, toPath);
+                Files.deleteIfExists(oldVersion);
+                Files.copy(targetPath, oldVersion);
+
+                Files.delete(targetPath);
+                Files.copy(sourcePath, targetPath);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }

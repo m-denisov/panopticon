@@ -14,8 +14,8 @@ public class StandardPaths {
 	public static final Path MAC_STAMPS = Paths.get("/Users/westtochka/Documents/panopticonTest/stamps");
 	public static final Path WIN_STAMPS = Paths.get("C:\\Users\\m.denisov\\stamps");
 
-	public static final Path MAC_TEMPS = Paths.get("/Users/westtochka/Documents/panopticonTest/temps");
-	public static final Path WIN_TEMPS = Paths.get("D:\\panopticon\\temps");
+	public static final Path MAC_OLD_VERSIONS = Paths.get("/Users/westtochka/Documents/panopticonTest/temps");
+	public static final Path WIN_OLD_VERSIONS = Paths.get("D:\\panopticon\\temps");
 
 	public static Path getStampsPath() {
 		if (isWindows()) {
@@ -27,11 +27,11 @@ public class StandardPaths {
 		}
 	}
 
-	public static Path getTempsPath() {
+	public static Path getOldVersionsPath() {
 		if (isWindows()) {
-			return WIN_TEMPS;
+			return WIN_OLD_VERSIONS;
 		} else if (isMac()) {
-			return MAC_TEMPS;
+			return MAC_OLD_VERSIONS;
 		} else {
 			throw new RuntimeException();
 		}
