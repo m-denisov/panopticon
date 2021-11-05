@@ -4,10 +4,11 @@ import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.output.manager.ConsoleOutputManager;
 
 import java.nio.file.Path;
+import java.util.*;
 
 public class App {
 
-	public static void main( String[] args ) {
+    public static void main(String[] args) {
         Path wsecondStampPath = Path.of("C:\\Users\\m.denisov\\stamps\\2.txt");
 
         Path wfirst = Path.of("C:\\Users\\m.denisov\\Documents\\Оборудование");
@@ -45,23 +46,7 @@ public class App {
 //        }
 
 
-        System.out.println(System.getProperty("os.name"));
     }
-
-    //    public void printDifferences(Path local, Path net) {
-//
-//    }
-//
-//    public void printIdentical(Path local, Path net) {
-//
-//    }
-//    public void printChanges(Path path) {
-//
-//    }
-//
-//    public void printUnchanged(Path path) {
-//
-//    }
 
     private static void initServices() {
         ExceptionHandler.registerOutputManager(new ConsoleOutputManager());

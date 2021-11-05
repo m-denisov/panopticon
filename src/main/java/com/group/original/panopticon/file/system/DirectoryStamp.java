@@ -69,8 +69,8 @@ public class DirectoryStamp implements Serializable {
             files = Files.walk(Path.of(root))
                     .filter(Files::isRegularFile)
                     .map(path -> new FileStamp(Path.of(root).relativize(path), readAttributes(path)))
-                    .peek(System.out::println)
-                    .collect(Collectors.toCollection(HashSet::new));
+                    .sorted(Comparator.comparing(FileStamp::getRelativePath))
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
         } catch (IOException e) {
             ExceptionHandler.outputMessage(e);
         }
@@ -81,8 +81,8 @@ public class DirectoryStamp implements Serializable {
             files = Files.walk(Path.of(root))
                     .filter(Files::isRegularFile)
                     .map(path -> new FileStamp(Path.of(root).relativize(path), readMD5(path), readAttributes(path)))
-                    .peek(System.out::println)
-                    .collect(Collectors.toCollection(HashSet::new));
+                    .sorted(Comparator.comparing(FileStamp::getRelativePath))
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
         } catch (IOException e) {
             ExceptionHandler.outputMessage(e);
         }
