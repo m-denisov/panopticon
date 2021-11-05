@@ -15,15 +15,21 @@ public class Copier {
     private Path targetRoot;
     private Set<FileStamp> fileStamps;
 
-    public void swapAll(Differences differences, TransferOrder transferOrder) {
-        transferFilesOnlyInOnePath(differences, transferOrder);
-        transferFilesOnlyInOnePath(differences, transferOrder.getOpposite());
-        swapModifiedFilesInBothDirections(differences);
+    public void swapAll(Differences differences) {
+        transferNewFilesBothDirections(differences);
+        swapModifiedFilesBothDirections(differences);
     }
 
-    public void transferFilesOnlyInOnePath(Differences differences, TransferOrder transferOrder) {
+    public void transferNewFilesBothDirections(Differences differences) {
+       transferNewFilesOneDirection(differences, TransferOrder.DIRECT);
+       transferNewFilesOneDirection(differences, TransferOrder.REVERS);
+    }
+
+    public void transferNewFilesOneDirection(Differences differences, TransferOrder transferOrder) {
         fillPathFields(differences, transferOrder);
-        Set<FileStamp> onlyInOne = transferOrder.isDirect() ? differences.getOnlyInFirst() : differences.getOnlyInSecond();
+        Set<FileStamp> onlyInOne = transferOrder.isDirect() ?
+                differences.getOnlyInFirst() :
+                differences.getOnlyInSecond();
         transfer(onlyInOne);
     }
 
@@ -54,30 +60,23 @@ public class Copier {
         }
     }
 
-    public void swapModifiedFilesInBothDirections(Differences differences) {
-        fillPathFields(differences, TransferOrder.DIRECT);
-
-        Set<FileStamp> modifiedLateInFirst = differences.getModifiedLateInFirst();
-        transfer(modifiedLateInFirst);
-
-        fillPathFields(differences, TransferOrder.REVERS);
-        Set<FileStamp> modifiedLateInSecond = differences.getModifiedLateInSecond();
-        transfer(modifiedLateInSecond);
+    public void swapModifiedFilesBothDirections(Differences differences) {
+        swapModifiedFilesOneDirection(differences, TransferOrder.DIRECT);
+        swapModifiedFilesOneDirection(differences, TransferOrder.REVERS);
     }
 
-    public void transferModifiedFiles(Differences differences, TransferOrder transferOrder) {
-        boolean isDirect = transferOrder.isDirect();
-        Path sourceRoot = isDirect ? differences.getFirstDirPath() : differences.getSecondDirPath();
-        Path targetRoot = isDirect ? differences.getSecondDirPath() : differences.getFirstDirPath();
+    public void swapModifiedFilesOneDirection(Differences differences, TransferOrder transferOrder) {
+        fillPathFields(differences, transferOrder);
 
-        Set<FileStamp> onlyInSource = isDirect ? differences.getOnlyInFirst() : differences.getOnlyInSecond();
-
-
+        Set<FileStamp> modifiedLateInOne = transferOrder == TransferOrder.DIRECT ?
+                differences.getModifiedLateInFirst() :
+                differences.getModifiedLateInSecond();
+        transfer(modifiedLateInOne);
     }
 
     public void transferFile(Path path, TransferOrder transferOrder) {
         String fileName = path.getFileName().toString();
-        // TODO: 04.11.2021  
+        // TODO: 04.11.2021
     }
 
     public void openCopy(Path fullPath) {
