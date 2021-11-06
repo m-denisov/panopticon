@@ -30,7 +30,7 @@ public class Copier {
         Set<FileStamp> onlyInOne = transferOrder.isDirect() ?
                 differences.getOnlyInFirst() :
                 differences.getOnlyInSecond();
-        transfer(onlyInOne);
+        transferSet(onlyInOne);
     }
 
     private void fillPathFields(Differences differences, TransferOrder transferOrder) {
@@ -39,24 +39,28 @@ public class Copier {
         targetRoot = isDirect ? differences.getSecondDirPath() : differences.getFirstDirPath();
     }
 
-    private void transfer(Set<FileStamp> fileStamps) {
+    private void transferSet(Set<FileStamp> fileStamps) {
         for (FileStamp fileStamp : fileStamps) {
-            Path sourcePath = sourceRoot.resolve(fileStamp.getRelativePath());
-            Path targetPath = targetRoot.resolve(fileStamp.getRelativePath());
+            transferFile(fileStamp);
+        }
+    }
 
-            String fileName = fileStamp.getRelativePath().getFileName().toString();
-            String oldFileName = fileStamp.getFormattedLastModifiedTime().concat("-").concat(fileName);
-            Path oldVersion = Path.of(oldFileName);
+    private void transferFile(FileStamp fileStamp) {
+        Path sourcePath = sourceRoot.resolve(fileStamp.getRelativePath());
+        Path targetPath = targetRoot.resolve(fileStamp.getRelativePath());
 
-            try {
-                Files.deleteIfExists(oldVersion);
-                Files.copy(targetPath, oldVersion);
+        String fileName = fileStamp.getRelativePath().getFileName().toString();
+        String oldFileName = fileStamp.getFormattedLastModifiedTime().concat("-").concat(fileName);
+        Path oldVersion = Path.of(oldFileName);
 
-                Files.delete(targetPath);
-                Files.copy(sourcePath, targetPath);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+        try {
+            Files.deleteIfExists(oldVersion);
+            Files.copy(targetPath, oldVersion);
+
+            Files.delete(targetPath);
+            Files.copy(sourcePath, targetPath);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 
@@ -71,13 +75,14 @@ public class Copier {
         Set<FileStamp> modifiedLateInOne = transferOrder == TransferOrder.DIRECT ?
                 differences.getModifiedLateInFirst() :
                 differences.getModifiedLateInSecond();
-        transfer(modifiedLateInOne);
+        transferSet(modifiedLateInOne);
     }
 
-    public void transferFile(Path path, TransferOrder transferOrder) {
-        String fileName = path.getFileName().toString();
-        // TODO: 04.11.2021
-    }
+//    public void transferFile(Differences differences, Path relativePath, TransferOrder transferOrder) {
+//       fillPathFields(differences, transferOrder);
+//       Path sourcePath = sourceRoot.resolve(relativePath);
+//       Path targetPath = targetRoot.resolve(relativePath);
+//    }
 
     public void openCopy(Path fullPath) {
         String extension;
