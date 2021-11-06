@@ -3,6 +3,7 @@ package com.group.original.panopticon;
 import com.group.original.panopticon.exception.ExceptionHandler;
 import com.group.original.panopticon.file.Copier;
 import com.group.original.panopticon.file.Researcher;
+import com.group.original.panopticon.file.TransferOrder;
 import com.group.original.panopticon.file.differences.Differences;
 import com.group.original.panopticon.file.system.DirectoryStamp;
 import com.group.original.panopticon.file.system.Stamper;
@@ -28,7 +29,7 @@ public class App {
         Researcher researcher = new Researcher();
         Copier copier = new Copier();
         Differences differences = researcher.compare(mfirst, msecond);
-        copier.swapAll(differences);
+        copier.transferNewFilesOneDirection(differences, TransferOrder.REVERS);
     }
 
 }
