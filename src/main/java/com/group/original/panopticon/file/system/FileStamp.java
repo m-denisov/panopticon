@@ -15,8 +15,6 @@ import java.util.Objects;
 public class FileStamp implements Serializable {
     private static final long serialVersionUID = 1;
 
-    private transient DateTimeFormatter formatter;
-
     private String relativePath;
     private String md5;
     private LocalDateTime creationTime;

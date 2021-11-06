@@ -14,7 +14,7 @@ public class Researcher {
     private static final Map<Path, DirectoryStamp> stamps = new HashMap<>();
 //    private static final long LIFE_TIME = 1;
 //    private static final ChronoUnit LIFE_TIME_UNIT = ChronoUnit.MINUTES;
-    private Map<Connection, StampMatcher> matchers;
+    private Map<Connection, StampMatcher> matchers = new HashMap<>();
 
     public Differences compareLazy(Path localPath, Path netPath) {
         Connection connection = new Connection(localPath, netPath);
