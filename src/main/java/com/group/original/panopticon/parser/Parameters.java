@@ -1,4 +1,4 @@
-package com.group.original.panopticon;
+package com.group.original.panopticon.parser;
 
 import java.util.Map;
 
