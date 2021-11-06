@@ -6,18 +6,17 @@ import com.group.original.panopticon.file.system.DirectoryStamp;
 import com.group.original.panopticon.file.system.Stamper;
 
 import java.nio.file.Path;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class Researcher {
     private static final Map<Path, DirectoryStamp> stamps = new HashMap<>();
-    private static final long LIFE_TIME = 1;
-    private static final ChronoUnit LIFE_TIME_UNIT = ChronoUnit.MINUTES;
+//    private static final long LIFE_TIME = 1;
+//    private static final ChronoUnit LIFE_TIME_UNIT = ChronoUnit.MINUTES;
     private Map<Connection, StampMatcher> matchers;
 
-    public Differences getDifferences(Path localPath, Path netPath) {
+    public Differences compareLazy(Path localPath, Path netPath) {
         Connection connection = new Connection(localPath, netPath);
         if (!isMatched(connection)) {
             DirectoryStamp localStamp = getStamp(localPath);
@@ -27,25 +26,15 @@ public class Researcher {
         return Differences.of(matchers.get(connection), getOrder(connection));
     }
 
-    private boolean isMatched(Connection connection) {
-        return matchers.get(connection) != null;
-    }
-
     public Differences compare(Path localPath, Path netPath) {
         DirectoryStamp local = DirectoryStamp.stampOf(localPath);
         DirectoryStamp net = DirectoryStamp.stampOf(netPath);
         return compareStamps(local, net);
     }
 
-    private Differences compareStamps(DirectoryStamp localStamp, DirectoryStamp netStamp) {
-        StampMatcher matcher = new StampMatcher(localStamp, netStamp);
-        Connection connection = new Connection(localStamp.getRoot(), netStamp.getRoot());
 
-        stamps.put(localStamp.getRoot(), localStamp);
-        stamps.put(netStamp.getRoot(), netStamp);
-        matchers.put(connection, matcher);
-
-        return Differences.of(matcher, ComparisonOrder.DIRECT);
+    private boolean isMatched(Connection connection) {
+        return matchers.get(connection) != null;
     }
 
     private ComparisonOrder getOrder(Connection connection) {
@@ -65,12 +54,28 @@ public class Researcher {
         return stamps.getOrDefault(path, DirectoryStamp.stampOf(path));
     }
 
-    public Differences getChanges(Path path) {
-        return null;
+    private Differences compareStamps(DirectoryStamp localStamp, DirectoryStamp netStamp) {
+        StampMatcher matcher = new StampMatcher(localStamp, netStamp);
+        Connection connection = new Connection(localStamp.getRoot(), netStamp.getRoot());
+
+        stamps.put(localStamp.getRoot(), localStamp);
+        stamps.put(netStamp.getRoot(), netStamp);
+        matchers.put(connection, matcher);
+
+        return Differences.of(matcher, ComparisonOrder.DIRECT);
     }
 
-    public void makeStamp(Path path) {
+    public Differences getChanges(Path dirPath) {
+        DirectoryStamp directoryStamp = DirectoryStamp.stampOf(dirPath);
+        DirectoryStamp saved = Stamper.readStamp(dirPath);
 
+        return compareStamps(directoryStamp, saved);
+    }
+
+    public void makeStamp(Path dirPath) {
+        DirectoryStamp directoryStamp = DirectoryStamp.stampOf(dirPath);
+        Stamper.writeStamp(directoryStamp);
+        stamps.put(dirPath, directoryStamp);
     }
 
     public boolean isSaved(Path path) {
