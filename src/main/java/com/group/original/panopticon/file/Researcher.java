@@ -20,9 +20,9 @@ public class Researcher {
     public Differences getDifferences(Path localPath, Path netPath) {
         Connection connection = new Connection(localPath, netPath);
         if (!isMatched(connection)) {
-            DirectoryStamp local = getStamp(localPath);
-            DirectoryStamp net = getStamp(netPath);
-            return compareStamps(local, net);
+            DirectoryStamp localStamp = getStamp(localPath);
+            DirectoryStamp netStamp = getStamp(netPath);
+            return compareStamps(localStamp, netStamp);
         }
         return Differences.of(matchers.get(connection), getOrder(connection));
     }
@@ -37,12 +37,12 @@ public class Researcher {
         return compareStamps(local, net);
     }
 
-    private Differences compareStamps(DirectoryStamp local, DirectoryStamp net) {
-        StampMatcher matcher = new StampMatcher(local, net);
-        Connection connection = new Connection(local.getRoot(), net.getRoot());
+    private Differences compareStamps(DirectoryStamp localStamp, DirectoryStamp netStamp) {
+        StampMatcher matcher = new StampMatcher(localStamp, netStamp);
+        Connection connection = new Connection(localStamp.getRoot(), netStamp.getRoot());
 
-        stamps.put(local.getRoot(), local);
-        stamps.put(net.getRoot(), net);
+        stamps.put(localStamp.getRoot(), localStamp);
+        stamps.put(netStamp.getRoot(), netStamp);
         matchers.put(connection, matcher);
 
         return Differences.of(matcher, ComparisonOrder.DIRECT);
@@ -62,11 +62,7 @@ public class Researcher {
     }
 
     private DirectoryStamp getStamp(Path path) {
-        DirectoryStamp stamp = stamps.get(path);
-        if (stamp == null) {
-            stamp = DirectoryStamp.stampOf(path);
-        }
-        return stamp;
+        return stamps.getOrDefault(path, DirectoryStamp.stampOf(path));
     }
 
     public Differences getChanges(Path path) {
