@@ -1,6 +1,6 @@
 package com.group.original.panopticon.file;
 
-import com.group.original.panopticon.StandardPaths;
+import com.group.original.panopticon.MainPaths;
 import com.group.original.panopticon.file.differences.Differences;
 import com.group.original.panopticon.file.system.FileStamp;
 
@@ -52,7 +52,7 @@ public class Copier {
 
         String fileName = fileStamp.getRelativePath().getFileName().toString();
         String oldFileName = fileStamp.getFormattedLastModifiedTime().concat("-").concat(fileName);
-        Path oldVersion = StandardPaths.getOldVersionsPath().resolve(oldFileName);
+        Path oldVersion = MainPaths.getOldVersionsPath().resolve(oldFileName);
 
         try {
             Files.deleteIfExists(oldVersion);

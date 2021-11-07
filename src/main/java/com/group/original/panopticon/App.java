@@ -1,16 +1,6 @@
 package com.group.original.panopticon;
 
-import com.group.original.panopticon.exception.ExceptionHandler;
-import com.group.original.panopticon.file.Copier;
-import com.group.original.panopticon.file.Researcher;
-import com.group.original.panopticon.file.TransferOrder;
-import com.group.original.panopticon.file.differences.Differences;
-import com.group.original.panopticon.file.system.DirectoryStamp;
-import com.group.original.panopticon.file.system.Stamper;
-import com.group.original.panopticon.output.manager.ConsoleOutputManager;
-
 import java.nio.file.Path;
-import java.util.*;
 
 public class App {
 
@@ -26,10 +16,16 @@ public class App {
         Path msecond = Path.of("/Users/westtochka/Documents/panopticonTest/second");
 
 
-        Researcher researcher = new Researcher();
-        Copier copier = new Copier();
-        Differences differences = researcher.compare(mfirst, msecond);
-        copier.transferNewFilesOneDirection(differences, TransferOrder.REVERS);
+//        Researcher researcher = new Researcher();
+//        Copier copier = new Copier();
+//        Differences differences = researcher.compare(mfirst, msecond);
+//        copier.transferNewFilesOneDirection(differences, TransferOrder.REVERS);
+
+
+        String p = MainPaths.class.getClassLoader().getResource("StandardPaths.xml").getPath();
+        System.out.println("-----");
+        System.out.println(p);
+        System.out.println("-----");
     }
 
 }
