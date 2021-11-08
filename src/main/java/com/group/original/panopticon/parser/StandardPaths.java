@@ -29,6 +29,7 @@ public class StandardPaths {
             DocumentBuilder documentBuilder = factory.newDocumentBuilder();
             Document xml = documentBuilder.parse(MainPaths.STANDARD_PATHS_FILE.toString());
             System.out.println(xml.getElementById("mac").getTagName());
+
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException ioException) {
