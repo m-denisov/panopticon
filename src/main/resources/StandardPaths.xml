@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<os name = "mac">
-    <path id = "1">
+<os id = "mac">
+    <path id = "mac_1">
         "/Users/westtochka/Documents/panopticonTest/first"
     </path>
-    <path id="2">
+    <path id="mac_2">
         "/Users/westtochka/Documents/panopticonTest/second"
     </path>
 </os>
