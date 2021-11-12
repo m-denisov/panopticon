@@ -1,18 +1,16 @@
-package com.group.original.panopticon.parser.command;
+package com.group.original.panopticon.parser.command.content;
 
-import java.nio.file.Path;
-
-public class Comment extends CommandContent {
-    public static final Comment EMPTY = new Comment() {
+public class CommentContent implements CommandContent {
+    public static final CommentContent EMPTY = new CommentContent() {
         @Override
         public boolean isEmpty() {
             return true;
         }
     };
 
-    private Comment() {}
+    private CommentContent() {}
 
-    public Comment(String comment) {
+    public CommentContent(String comment) {
         this.comment = comment;
     }
 

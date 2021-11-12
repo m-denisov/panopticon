@@ -1,18 +1,18 @@
-package com.group.original.panopticon.parser.command;
+package com.group.original.panopticon.parser.command.content;
 
 import java.nio.file.Path;
 
-public class BinaryContent extends CommandContent {
-    public static final BinaryContent EMPTY = new BinaryContent() {
+public class UnaryPathContent extends PathContent {
+    public static final UnaryPathContent EMPTY = new UnaryPathContent() {
         @Override
         public boolean isEmpty() {
             return true;
         }
     };
 
-    private BinaryContent() {}
+    private UnaryPathContent() {}
 
-    public BinaryContent(Path path) {
+    public UnaryPathContent(Path path) {
         this.path = path;
     }
 
@@ -22,7 +22,7 @@ public class BinaryContent extends CommandContent {
         return path;
     }
 
-    @Override
+        @Override
     public boolean isEmpty() {
         return false;
     }
