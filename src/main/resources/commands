@@ -1,7 +1,4 @@
-package com.group.original.panopticon.parser;
-
-public enum Commands {
-    /**Main**/
+ /**Main**/
     BREAK,
     EXIT,
     WAIT,
@@ -26,6 +23,3 @@ public enum Commands {
     GET_CHANGES,
     MAKE_STAMP,
     IS_SAVED
-
-
-}

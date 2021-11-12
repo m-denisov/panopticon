@@ -8,10 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Stamper {
-    public static final String WIN_OS_NAME_PREFIX = "win";
-    public static final String MAC_OS_NAME_PREFIX = "mac";
-
-    public static void writeStamp(DirectoryStamp directoryStamp) {
+        public static void writeStamp(DirectoryStamp directoryStamp) {
         if (directoryStamp == null) throw new IllegalArgumentException("stamp is null");
 
         String stampPath = getStampPath(directoryStamp.getRoot());

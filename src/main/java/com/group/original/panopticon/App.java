@@ -1,6 +1,7 @@
 package com.group.original.panopticon;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 
 public class App {
 
@@ -22,10 +23,12 @@ public class App {
 //        copier.transferNewFilesOneDirection(differences, TransferOrder.REVERS);
 
 
-        String p = MainPaths.class.getClassLoader().getResource("StandardPaths.xml").getPath();
-        System.out.println("-----");
-        System.out.println(p);
-        System.out.println("-----");
+//        String p = MainPaths.class.getClassLoader().getResource("StandardPaths.xml").getPath();
+//        System.out.println("-----");
+//        System.out.println(p);
+//        System.out.println("-----");
+
+        System.out.println(Arrays.toString(args));
     }
 
 }
