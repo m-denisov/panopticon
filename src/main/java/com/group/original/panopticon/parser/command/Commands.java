@@ -18,7 +18,7 @@ public class Commands {
     public static final Command SWAP_MODIFIED_FILES_BOTH_DIRECTIONS = new PathCommand();
     public static final Command SWAP_MODIFIED_FILES_DIRECT = new PathCommand();
     public static final Command SWAP_MODIFIED_FILES_REVERSE = new PathCommand();
-    public static final Command OPEN_COPY = new UnaryPathCommand();
+//    public static final Command OPEN_COPY = new UnaryPathCommand();
 
     /**Researcher**/
 //    public static final Command COMPARE = new PathCommand();
