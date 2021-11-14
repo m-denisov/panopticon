@@ -1,6 +1,6 @@
 package com.group.original.panopticon.parser.command.content;
 
-public class CommentContent implements CommandContent {
+public class CommentContent implements Content {
     public static final CommentContent EMPTY = new CommentContent() {
         @Override
         public boolean isEmpty() {

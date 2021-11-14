@@ -1,7 +1,8 @@
 package com.group.original.panopticon.parser.command;
 
-import com.group.original.panopticon.parser.command.content.CommandContent;
+import com.group.original.panopticon.parser.command.content.Content;
 
-public interface Command {
-   CommandContent getContent();
+public interface Command<C extends Content> {
+   Content getContent();
+   Command setContent(C content);
 }

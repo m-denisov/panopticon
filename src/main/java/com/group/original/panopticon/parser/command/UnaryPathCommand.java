@@ -1,27 +1,28 @@
 package com.group.original.panopticon.parser.command;
 
+import com.group.original.panopticon.parser.command.content.Content;
 import com.group.original.panopticon.parser.command.content.PathContent;
 import com.group.original.panopticon.parser.command.content.UnaryPathContent;
 
-public class UnaryPathCommand extends PathCommand {
-    public UnaryPathCommand(UnaryPathContent pathContent) {
-        super(pathContent);
+public class UnaryPathCommand implements Command<UnaryPathContent> {
+    private UnaryPathContent content;
+
+    public UnaryPathCommand(UnaryPathContent content) {
+        this.content = content;
     }
 
     UnaryPathCommand() {
-        super();
+        content = UnaryPathContent.EMPTY;
     }
 
     @Override
-    public void setContent(PathContent pathContent) {
-        if (pathContent instanceof UnaryPathContent) {
-            super.setContent(pathContent);
-        }
-        throw new IllegalArgumentException();
+    public Content getContent() {
+        return content;
     }
 
     @Override
-    public PathContent getContent() {
-        return super.getContent();
+    public Command setContent(UnaryPathContent content) {
+        this.content = content;
+        return this;
     }
 }
