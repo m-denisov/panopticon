@@ -1,24 +1,17 @@
 package com.group.original.panopticon.parser.command.content;
 
 public class CommentContent implements Content {
-    public static final CommentContent EMPTY = new CommentContent() {
-        @Override
-        public boolean isEmpty() {
-            return true;
-        }
-    };
-
-    private CommentContent() {}
+    private String comment;
+    public static final CommentContent EMPTY = new CommentContent();
 
     public CommentContent(String comment) {
         this.comment = comment;
     }
 
-    public String comment;
-
-    public String getComment() {
-        return comment;
+    private CommentContent() {
+        comment = "";
     }
+
 
     @Override
     public boolean isEmpty() {

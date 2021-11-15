@@ -1,7 +1,6 @@
 package com.group.original.panopticon.parser.command;
 
 import com.group.original.panopticon.parser.command.content.Content;
-import com.group.original.panopticon.parser.command.content.PathContent;
 import com.group.original.panopticon.parser.command.content.UnaryPathContent;
 
 public class UnaryPathCommand implements Command<UnaryPathContent> {

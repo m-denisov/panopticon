@@ -1,7 +1,10 @@
 package com.group.original.panopticon;
 
+import com.group.original.panopticon.parser.command.Command;
+import com.group.original.panopticon.parser.command.UnaryPathCommand;
+import com.group.original.panopticon.parser.command.content.UnaryPathContent;
+
 import java.nio.file.Path;
-import java.util.Arrays;
 
 public class App {
 
@@ -28,7 +31,17 @@ public class App {
 //        System.out.println(p);
 //        System.out.println("-----");
 
-        System.out.println(Arrays.toString(args));
+//        String s = "";
+//        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+//            s = reader.readLine();
+//        } catch (IOException ioException) {
+//            ioException.printStackTrace();
+//        }
+//        String s1 = "a p \"/Users/westtochka/Documents/panopticonTest/first\"";
+//        String s2 = "a p \"C:\\Users\\m.denisov\\Documents\\Оборудование\"";
+//        ArgsParser.parse(s);
+
+        Command command = new UnaryPathCommand(new UnaryPathContent(wfirst));
     }
 
 }

@@ -9,20 +9,23 @@ public class UnaryPathContent extends PathContent {
             return true;
         }
     };
-
-    private UnaryPathContent() {}
+    public Path path;
 
     public UnaryPathContent(Path path) {
         this.path = path;
     }
+    private UnaryPathContent() {}
 
-    public Path path;
-
-    public Path getPath() {
+    public Path getFirst() {
         return path;
     }
 
-        @Override
+    @Override
+    public Path getSecond() {
+        return null;
+    }
+
+    @Override
     public boolean isEmpty() {
         return false;
     }

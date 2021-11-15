@@ -1,12 +1,12 @@
 package com.group.original.panopticon.parser.command;
 
-import com.group.original.panopticon.parser.command.content.Content;
 import com.group.original.panopticon.parser.command.content.CommentContent;
+import com.group.original.panopticon.parser.command.content.Content;
 
-public class CommentCommand implements Command<CommentContent> {
-    private CommentContent content;
+public class CommentCommand implements Command<Content> {
+    private Content content;
 
-    public CommentCommand(CommentContent content) {
+    public CommentCommand(Content content) {
         this.content = content;
     }
 
@@ -20,7 +20,7 @@ public class CommentCommand implements Command<CommentContent> {
     }
 
     @Override
-    public Command setContent(CommentContent content) {
+    public Command setContent(Content content) {
         this.content = content;
         return null;
     }

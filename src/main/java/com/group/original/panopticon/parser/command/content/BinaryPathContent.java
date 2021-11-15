@@ -9,17 +9,21 @@ public class BinaryPathContent extends PathContent {
             return true;
         }
     };
+    private Path firstPath;
+    private Path secondPath;
 
+    public BinaryPathContent(Path firstPath, Path secondPath) {
+        this.firstPath = firstPath;
+        this.secondPath = secondPath;
+    }
     private BinaryPathContent() {}
 
-    public BinaryPathContent(Path path) {
-        this.path = path;
+    public Path getFirst() {
+        return firstPath;
     }
 
-    public Path path;
-
-    public Path getPath() {
-        return path;
+    public Path getSecond() {
+        return secondPath;
     }
 
     @Override

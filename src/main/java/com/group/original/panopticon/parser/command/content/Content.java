@@ -1,8 +1,9 @@
 package com.group.original.panopticon.parser.command.content;
 
+import java.nio.file.Path;
+
 public interface Content {
 
-    public abstract boolean isEmpty();
-
+    boolean isEmpty();
 
 }
