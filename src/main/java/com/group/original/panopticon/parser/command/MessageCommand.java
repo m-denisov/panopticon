@@ -1,17 +1,17 @@
 package com.group.original.panopticon.parser.command;
 
-import com.group.original.panopticon.parser.command.content.CommentContent;
+import com.group.original.panopticon.parser.command.content.MessageContent;
 import com.group.original.panopticon.parser.command.content.Content;
 
-public class CommentCommand implements Command<Content> {
+public class MessageCommand implements Command<Content> {
     private Content content;
 
-    public CommentCommand(Content content) {
+    public MessageCommand(Content content) {
         this.content = content;
     }
 
-    CommentCommand() {
-        content = CommentContent.EMPTY;
+    MessageCommand() {
+        content = MessageContent.EMPTY;
     }
 
     @Override
