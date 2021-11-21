@@ -1,6 +1,5 @@
 package com.group.original.panopticon.parser.command;
 
-import com.group.original.panopticon.parser.command.content.Content;
 import com.group.original.panopticon.parser.command.content.UnaryPathContent;
 
 public class UnaryPathCommand implements Command<UnaryPathContent> {
@@ -15,12 +14,12 @@ public class UnaryPathCommand implements Command<UnaryPathContent> {
     }
 
     @Override
-    public Content getContent() {
+    public UnaryPathContent getContent() {
         return content;
     }
 
     @Override
-    public Command setContent(UnaryPathContent content) {
+    public UnaryPathCommand setContent(UnaryPathContent content) {
         this.content = content;
         return this;
     }

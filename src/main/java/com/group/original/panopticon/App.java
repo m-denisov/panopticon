@@ -5,8 +5,12 @@ import com.group.original.panopticon.parser.command.UnaryPathCommand;
 import com.group.original.panopticon.parser.command.content.UnaryPathContent;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public class App {
+
+    private static Map<Integer, Path> mnemonics = new HashMap<>();
 
     public static void main(String[] args) {
         Path wsecondStampPath = Path.of("C:\\Users\\m.denisov\\stamps\\2.txt");

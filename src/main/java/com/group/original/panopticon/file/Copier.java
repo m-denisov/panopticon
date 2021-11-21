@@ -46,12 +46,9 @@ public class Copier {
         }
     }
 
-    private void transferFile(FileStamp fileStamp) {
-        Path sourcePath = sourceRoot.resolve(fileStamp.getRelativePath());
-        Path targetPath = targetRoot.resolve(fileStamp.getRelativePath());
-
-        String fileName = fileStamp.getRelativePath().getFileName().toString();
-        String oldFileName = fileStamp.getFormattedLastModifiedTime().concat("-").concat(fileName);
+    public void transferFile(Path sourcePath, Path targetPath, String lastModifiedTime) {
+        String fileName = sourcePath.getFileName().toString();
+        String oldFileName = lastModifiedTime.concat("-").concat(fileName);
         Path oldVersion = MainPaths.getOldVersionsPath().resolve(oldFileName);
 
         try {
@@ -65,6 +62,14 @@ public class Copier {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    private void transferFile(FileStamp fileStamp) {
+        Path sourcePath = sourceRoot.resolve(fileStamp.getRelativePath());
+        Path targetPath = targetRoot.resolve(fileStamp.getRelativePath());
+        String lastModifiedTime = fileStamp.getFormattedLastModifiedTime();
+
+        transferFile(sourcePath, targetPath, lastModifiedTime);
     }
 
     public void swapModifiedFilesBothDirections(Differences differences) {

@@ -1,6 +1,5 @@
 package com.group.original.panopticon.parser.command;
 
-import com.group.original.panopticon.parser.command.content.Content;
 import com.group.original.panopticon.parser.command.content.PathContent;
 
 public class PathCommand implements Command<PathContent> {
@@ -15,12 +14,12 @@ public class PathCommand implements Command<PathContent> {
     }
 
     @Override
-    public Content getContent() {
+    public PathContent getContent() {
         return pathContent;
     }
 
     @Override
-    public Command setContent(PathContent content) {
+    public PathCommand setContent(PathContent content) {
         this.pathContent = content;
         return this;
     }
