@@ -78,5 +78,8 @@ public class Differences {
         return matcher.getFirstDirPath();
     }
 
+    public FileStamp getStamp(Path root, Path relative) {
+        return matcher.getStamp(root, relative);
+    }
 
 }

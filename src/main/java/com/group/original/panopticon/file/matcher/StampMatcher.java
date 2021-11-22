@@ -166,6 +166,15 @@ public class StampMatcher {
         return onlyInFirst.isEmpty() && onlyInSecond.isEmpty();
     }
 
+    public FileStamp getStamp(Path root, Path relative) {
+        if (root.equals(firstDir.getRoot())) {
+            return firstDir.getFile(relative);
+        } else if (root.equals(secondDir.getRoot())) {
+            return secondDir.getFile(relative);
+        }
+        throw new RuntimeException();
+    }
+
 //    @Override
 //    public String toString() {
 //        StringBuilder builder = new StringBuilder();

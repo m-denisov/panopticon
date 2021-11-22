@@ -95,9 +95,16 @@ public class ArgsParser {
     private static Command<? extends PathContent> selectCopyModifiers(Matcher matcher, PathContent content) {
         String mod = matcher.group(MODIFIER);
 
-        if (mod == null || mod.isBlank()) return Commands.SWAP_ALL.setContent(content);
+        if (mod == null || mod.isBlank()) {
+            if (!(content instanceof BinaryPathContent)) {
+                throw new RuntimeException();
+            }
+            return Commands.TRANSFER_FILE.setContent((BinaryPathContent) content);
+        }
 
         switch (mod) {
+            case Modifiers.DIR:
+                return Commands.SWAP_ALL.setContent(content);
             case Modifiers.MODIFIED:
                 return Commands.SWAP_MODIFIED_FILES_DIRECT.setContent(content);
             case Modifiers.MODIFIED_ALL:

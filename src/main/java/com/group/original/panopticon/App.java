@@ -45,7 +45,13 @@ public class App {
 //        String s2 = "a p \"C:\\Users\\m.denisov\\Documents\\Оборудование\"";
 //        ArgsParser.parse(s);
 
-        Command command = new UnaryPathCommand(new UnaryPathContent(wfirst));
+        try {
+            Path path = Path.of("uygv");
+            System.out.println("|" + path + "|");
+        } catch (Throwable throwable) {
+            System.out.println(throwable.getMessage());
+        }
+
     }
 
 }
