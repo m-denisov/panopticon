@@ -2,7 +2,7 @@ package com.group.original.panopticon;
 
 import junit.framework.TestCase;
 
-public class MainPathsTest extends TestCase {
+public class MainProgramPathsTest extends TestCase {
 
     public void testGetStampsPath() {
     }

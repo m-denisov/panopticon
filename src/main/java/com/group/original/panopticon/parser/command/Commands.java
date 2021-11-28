@@ -10,6 +10,7 @@ public class Commands {
     public static final Command<Content> BREAK = new SimpleCommand();
     public static final Command<Content> EXIT = new SimpleCommand();
     public static final Command<Content> EXIT_NOW = new SimpleCommand();
+    public static final Command<Content> STANDARD_PATHS = new SimpleCommand();
 //    public static final Command WAIT = new MessageCommand();
     public static final Command<Content> REPORT = new MessageCommand();
     public static final Command<Content> REPORT_AND_WAIT = new MessageCommand();

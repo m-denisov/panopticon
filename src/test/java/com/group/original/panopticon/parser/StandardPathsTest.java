@@ -1,10 +1,7 @@
 package com.group.original.panopticon.parser;
 
+import com.group.original.panopticon.StandardPaths;
 import junit.framework.TestCase;
-import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
 
 public class StandardPathsTest extends TestCase {
 

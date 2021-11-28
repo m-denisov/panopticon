@@ -1,6 +1,6 @@
 package com.group.original.panopticon.file.system;
 
-import com.group.original.panopticon.MainPaths;
+import com.group.original.panopticon.MainProgramPaths;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
@@ -32,7 +32,7 @@ public class Stamper {
 
     private static String getStampPath(Path directoryPath) {
         String stampName = DigestUtils.md5Hex(directoryPath.toString()) + ".stamp";
-        return MainPaths.getStampsPath()
+        return MainProgramPaths.getStampsPath()
                 .resolve(stampName)
                 .toString();
     }

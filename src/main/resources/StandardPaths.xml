@@ -2,18 +2,18 @@
 
 <paths>
 <os name = "mac">
-    <path id = "1" connected = "2">
+    <path id="1">
         "/Users/westtochka/Documents/panopticonTest/first"
     </path>
-    <path id="2" connected="1">
+    <path id="2">
         "/Users/westtochka/Documents/panopticonTest/second"
     </path>
 </os>
 <os name="win">
-    <path id="1" connected="2">
+    <path id="1">
         "C:\Users\m.denisov\Documents\Оборудование"
     </path>
-    <path id="2" connected="1">
+    <path id="2">
         "D:\test"
     </path>
 </os>
