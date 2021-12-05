@@ -34,6 +34,7 @@ public class App {
     public App() {
         //first receive command to show
         standardPaths = new StandardPaths();
+
     }
 
     public Path getPath(Path path) {

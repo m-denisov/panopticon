@@ -23,6 +23,9 @@ public class StandardPaths {
     private int pathsNumber;
     private Map<Integer, Path> standardPath = new HashMap<>();
 
+    //Для чтения - а это самый частый сценарий - достаточно XPath
+    //Для изменения лучше использовать DOM-модель, т. к. она позволяет иметь полный доступ к документу.
+    //XPath - по-моему, надстройка над SAX, который работает только на чтение
     public StandardPaths() {
         try {
             init();
@@ -60,9 +63,10 @@ public class StandardPaths {
 
     public void readStandardPaths() {
         try {
-            List<Integer> idList = readIDs();
+            NodeList pathsList = readIDNodes();
+            int pathsNumber = pathsList.getLength();
 
-            for (int i = 1; i < idList.size() + 1; i++) {
+            for (int i = 1; i < pathsNumber + 1; i++) {
                 String expr = "paths/os[@name='" + osName + "']/path[@id=" + i + "]/text()";
                 XPathExpression pathExpression = xPath.compile(expr);
                 String stringPath = (String) pathExpression.evaluate(xml, XPathConstants.STRING);
@@ -73,15 +77,10 @@ public class StandardPaths {
         }
     }
 
-    private List<Integer> readIDs() throws XPathExpressionException {
+    private NodeList readIDNodes() throws XPathExpressionException {
         XPathExpression idExpression = xPath.compile("/paths/os[@name='" + osName + "']/path/@id");
         NodeList nodeList = (NodeList) idExpression.evaluate(xml, XPathConstants.NODESET);
-        List<Integer> idList = new ArrayList<>();
-
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            idList.add(Integer.parseInt(nodeList.item(i).getNodeValue()));
-        }
-        return Collections.unmodifiableList(idList);
+        return nodeList;
     }
 
 
