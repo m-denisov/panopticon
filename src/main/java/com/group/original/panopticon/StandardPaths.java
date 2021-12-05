@@ -13,12 +13,15 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class StandardPaths {
+    private static final String OS_NAME_ATTR = "name";
+    private static final String PATH_ID_ATTR = "id";
+
     private String osName;
     private Document xml;
     private XPath xPath;
 
     private int pathsNumber;
-    private Map<Integer, Path> paths = new HashMap<>();
+    private Map<Integer, Path> standardPath = new HashMap<>();
 
     public StandardPaths() {
         try {
@@ -33,7 +36,7 @@ public class StandardPaths {
             e.printStackTrace();
         }
 
-        read();
+        readStandardPaths();
     }
 
     private void init() throws ParserConfigurationException, IOException, SAXException {
@@ -55,7 +58,7 @@ public class StandardPaths {
         throw new RuntimeException("no os name");
     }
 
-    public void read() {
+    public void readStandardPaths() {
         try {
             List<Integer> idList = readIDs();
 
@@ -63,7 +66,7 @@ public class StandardPaths {
                 String expr = "paths/os[@name='" + osName + "']/path[@id=" + i + "]/text()";
                 XPathExpression pathExpression = xPath.compile(expr);
                 String stringPath = (String) pathExpression.evaluate(xml, XPathConstants.STRING);
-                paths.put(i, Path.of(stringPath.trim()));
+                standardPath.put(i, Path.of(stringPath.trim()));
             }
         } catch (XPathExpressionException e) {
             e.printStackTrace();
@@ -83,23 +86,23 @@ public class StandardPaths {
 
 
 
-    public Map<Integer, Path> getPaths() {
-        return paths;
+    public Map<Integer, Path> getStandardPaths() {
+        return standardPath;
     }
 
-    public Path get(int index) {
-        return paths.get(index);
+    public Path getStandardPathAtIndex(int index) {
+        return standardPath.get(index);
     }
 
-    public void write(Path path) {
-
-    }
-
-    public void edit(int index, Path newValue) {
+    public void writeStandardPath(Path path) {
 
     }
 
-    public void delete(int index) {
+    public void editStandardPath(int index, Path newValue) {
+
+    }
+
+    public void deleteStandardPath(int index) {
 
     }
 }

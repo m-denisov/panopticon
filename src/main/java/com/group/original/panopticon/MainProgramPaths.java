@@ -4,7 +4,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MainProgramPaths {
-	public static final String OS_NAME = System.getProperty("os.name").toLowerCase();
+	private static final String WIN_OS_NAME = "win";
+	private static final String MAC_OS_NAME = "mac";
+	public static final String OS_NAME;
+	static {
+		String osFullName = System.getProperty("os.name");
+		OS_NAME = osFullName.toLowerCase().contains(WIN_OS_NAME) ?
+				WIN_OS_NAME :
+				osFullName.toLowerCase().contains(MAC_OS_NAME) ?
+						MAC_OS_NAME :
+						osFullName;
+	}
 
 	public static final Path LOCAL_PATH = Paths.get("C:\\Users\\m.denisov\\Documents");
 	public static final Path NET_PATH = Paths.get("F:\\1EN-TraceWay\\2.9. Департамент качества\\Обмен\\Денисов");
@@ -40,11 +50,11 @@ public class MainProgramPaths {
 	}
 
 	public static boolean isWindows() {
-		return OS_NAME.contains("win");
+		return OS_NAME.equals(WIN_OS_NAME);
 	}
 
 	public static boolean isMac() {
-		return OS_NAME.contains("mac");
+		return OS_NAME.equals(MAC_OS_NAME);
 	}
 
 

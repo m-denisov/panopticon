@@ -48,6 +48,7 @@ public class ArgsParser {
         if (argsString.equals(Parameters.EXIT)) return Commands.EXIT;
         if (argsString.equals(Parameters.BREAK)) return Commands.BREAK;
         if (argsString.equals(Parameters.INFO)) return Commands.INFO;
+        if (argsString.equals(Parameters.STANDARD_PATHS)) return Commands.STANDARD_PATHS;
 
         Matcher unaryMatcher = MAIN_UNARY.matcher(argsString);
         Matcher binaryMatcher = MAIN_BINARY.matcher(argsString);

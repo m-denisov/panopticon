@@ -7,7 +7,7 @@ public class StandardPathsTest extends TestCase {
 
     public void testRead() {
         StandardPaths standardPaths = new StandardPaths();
-        standardPaths.read();
+        standardPaths.readStandardPaths();
 
     }
 
