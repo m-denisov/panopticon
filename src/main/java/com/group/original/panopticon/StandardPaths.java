@@ -29,13 +29,8 @@ public class StandardPaths {
     public StandardPaths() {
         try {
             init();
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
             osName = readOsName();
-        } catch (XPathExpressionException e) {
+        } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException e) {
             e.printStackTrace();
         }
 
@@ -83,8 +78,6 @@ public class StandardPaths {
         return nodeList;
     }
 
-
-
     public Map<Integer, Path> getStandardPaths() {
         return standardPath;
     }
@@ -94,14 +87,14 @@ public class StandardPaths {
     }
 
     public void writeStandardPath(Path path) {
-
+        throw new RuntimeException("not now");
     }
 
     public void editStandardPath(int index, Path newValue) {
-
+        throw new RuntimeException("not now");
     }
 
     public void deleteStandardPath(int index) {
-
+        throw new RuntimeException("not now");
     }
 }

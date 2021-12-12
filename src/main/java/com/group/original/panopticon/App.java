@@ -1,27 +1,23 @@
 package com.group.original.panopticon;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import com.group.original.panopticon.io.ConsoleInputManager;
+import com.group.original.panopticon.io.InputManager;
+import com.group.original.panopticon.io.OutputManager;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Flow;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class App {
+public class App implements Flow.Subscriber<String> {
     private static final String MNEMONIC_NAME = "digit";
     private static final Pattern MNEMONIC_PATTERN = Pattern.compile("\"?(?<" + MNEMONIC_NAME + ">\\d)\"?");
 
+    private InputManager inputManager;
+    private OutputManager outputManager;
     private StandardPaths standardPaths;
 
     private Map<Integer, Path> mnemonics = new HashMap<>();
@@ -33,11 +29,22 @@ public class App {
 
     public App() {
         //first receive command to show
-        standardPaths = new StandardPaths();
-
+//        readStandardPaths();
+//        for (Map.Entry<Integer, Path> entry : mnemonics.entrySet()) {
+//            System.out.println(entry.getKey());
+//            System.out.println(entry.getValue());
+//        }
+        inputManager = new ConsoleInputManager();
+        inputManager.subscribe(this);
     }
 
-    public Path getPath(Path path) {
+
+    public void readStandardPaths() {
+        standardPaths = new StandardPaths();
+        mnemonics = standardPaths.getStandardPaths();
+    }
+
+    public Path getPathThroughMnemonic(Path path) {
         if (Files.exists(path)) {
             return path;
         } else {
@@ -55,4 +62,23 @@ public class App {
         throw new RuntimeException("file not exist");
     }
 
+    @Override
+    public void onSubscribe(Flow.Subscription subscription) {
+
+    }
+
+    @Override
+    public void onNext(String item) {
+        System.out.println(item);
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
 }

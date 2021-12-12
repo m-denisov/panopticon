@@ -1,6 +1,6 @@
 package com.group.original.panopticon.exception;
 
-import com.group.original.panopticon.output.manager.OutputManager;
+import com.group.original.panopticon.io.OutputManager;
 
 import java.util.ArrayList;
 import java.util.List;
