@@ -1,7 +1,5 @@
 package com.group.original.panopticon.io;
 
-import com.group.original.panopticon.App;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

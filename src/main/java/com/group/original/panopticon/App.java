@@ -1,8 +1,9 @@
 package com.group.original.panopticon;
 
-import com.group.original.panopticon.io.ConsoleInputManager;
 import com.group.original.panopticon.io.InputManager;
 import com.group.original.panopticon.io.OutputManager;
+import com.group.original.panopticon.parser.ArgsParser;
+import com.group.original.panopticon.parser.Parameters;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,8 +35,32 @@ public class App implements Flow.Subscriber<String> {
 //            System.out.println(entry.getKey());
 //            System.out.println(entry.getValue());
 //        }
-        inputManager = new ConsoleInputManager();
-        inputManager.subscribe(this);
+//        inputManager = new ConsoleInputManager();
+//        inputManager.subscribe(this);
+
+        Pattern bi = Pattern.compile("(?<param>a|c)" +
+                "(\\s(?<mod>[^p]*))?" +
+                "\\s[pP][1]" + "\\s(?<p1>\".+\")" +
+                "\\s[pP][2]" + "\\s(?<p2>\".+\")");
+        Pattern simplePattern = Pattern.compile(
+                "c\\s[a-z]*\\sp1\\s\".+\""
+        );
+
+        String simple = "c dir p1 \"/Users\"";
+
+        String copy_mac_bi = "c dir n p1 \"/Users/westtochka/Documents/panopticonTest/first\" " +
+                "p2 \"/Users/westtochka/Documents/panopticonTest/second\"";
+
+        String ss = "c p \"/Users/westtochka/Documents/panopticonTest/first\"";
+
+        Matcher matcher = bi.matcher(copy_mac_bi);
+        Matcher matcher1 = ArgsParser.MAIN_BINARY.matcher(copy_mac_bi);
+        Matcher matcherSimple = simplePattern.matcher(simple);
+        if (matcher.find()) {
+            System.out.println(matcher.group("param") + "|");
+            System.out.println(matcher.group("mod") + "|");
+//            System.out.println(simple.substring(matcherSimple.start(), matcherSimple.end()));
+        }
     }
 
 

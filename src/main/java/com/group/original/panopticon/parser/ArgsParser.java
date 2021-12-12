@@ -23,28 +23,33 @@ public class ArgsParser {
             Parameters.COPY + "|" +
             Parameters.MAKE_STAMP + "|" +
             Parameters.IS_SAVED + ")" +
-            "(\\s(?<" + MODIFIER + ">[a-zA-Z&&[^pP]]))?" +
-            "\\s[pP]" +
-            "\\s(?<" + PATH + ">\".+\")");
+            "(\\s(?<" + MODIFIER + ">[^p]*))?" +
+            "\\s[pP]" + "\\s(?<" + PATH + ">\".+\")");
 
     public static final Pattern MAIN_BINARY = Pattern.compile("(?<" + PARAMETER + ">" +
             Parameters.ANALYSE + "|" +
             Parameters.COPY + ")" +
-            "(\\s(?<" + MODIFIER + ">[a-zA-Z&&[^pP]]))?" +
-            "\\s[pP][1]" +
-            "\\s(?<" + PATH_1 + ">\".+\")" +
-            "\\s[pP][2]" +
-            "\\s(?<" + PATH_2 + ">\".+\")");
+            "(\\s(?<" + MODIFIER + ">[^p]*))?" +
+            "\\s[pP][1]" + "\\s(?<" + PATH_1 + ">\".+\")" +
+            "\\s[pP][2]" + "\\s(?<" + PATH_2 + ">\".+\")");
 
     public static Command parse(String[] args) {
         if (args.length == 0) {
-
+            throw new RuntimeException();
         }
 
-        return null;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < args.length - 1; i++) {
+            builder.append(args[i]);
+            builder.append(" ");
+        }
+        builder.append(args[args.length - 1]);
+
+        return parse(builder.toString());
     }
 
     public static Command<? extends Content> parse(String argsString) {
+        if (argsString.length() == 0 || argsString.isBlank()) throw new RuntimeException();
         if (argsString.equals(Parameters.EXIT)) return Commands.EXIT;
         if (argsString.equals(Parameters.BREAK)) return Commands.BREAK;
         if (argsString.equals(Parameters.INFO)) return Commands.INFO;
